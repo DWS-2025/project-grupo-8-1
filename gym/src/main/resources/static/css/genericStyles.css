@@ -1,0 +1,61 @@
+@font-face {
+    font-family: 'Horizon';
+    src: url(/fonts/horizon.otf);
+}
+
+body {
+    background-color: black;
+    font-family: 'Horizon', sans-serif;
+    color: white;
+}
+
+.header {
+    display: flex;
+    margin: 5vh 5vh 3vh 5vh;
+}
+
+.icon_header{
+    display: flex;
+    flex-direction: row;
+    color: #ff4739;
+    width: 1100px;
+    max-width: 1100px;
+}
+
+.icon_header img {
+    height: 59.9px;
+    width: 82.9px;
+}
+
+.icon_header div{
+    width: 246px;
+    margin-top: 10px;
+}
+
+.options_header{
+    display: flex;
+    flex-direction: row;
+}
+
+.options_header a{
+    padding-top: 2vh;
+    margin-left: 60px;
+    text-decoration: none;
+    color: white;
+}
+
+.boton_black{
+    display: inline-block;
+    text-decoration: none;
+    padding: 2vh 4vh;
+    background-color: #ff4739;
+    color: black;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.footer{
+    margin-top: 40px;
+}

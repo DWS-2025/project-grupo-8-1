@@ -1,0 +1,26 @@
+.carrousel{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.cont_carrousel{
+    width: 40%;
+    font-size: 50px;
+    padding-top: 10vh;
+    padding-left: 10vh;
+    padding-right: 10vh;
+}
+
+.cont_carrousel div{
+    margin-bottom: 15vh;
+}
+
+.img_carrousel{
+    width: 60%;
+    height: 70vh;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 1) 100%), url('/images/img_home.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
