@@ -1,24 +1,20 @@
 package es.dws.gym.user;
 
 public class user {
-    private int id;
     private String telephone;
     private String mail;
     private String address;
+    private String password;
 
-    public user(int id, String telephone, String mail, String address){
-        this.id = id;
+    public user(int id, String telephone, String mail, String address, String password){
         this.telephone = telephone;
         this.mail = mail;
         this.address = address;
+        this.password = password;
     }
 
     public String getAddress() {
         return address;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getMail() {
@@ -27,6 +23,10 @@ public class user {
     
     public String getTelephone() {
         return telephone;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setAddress(String address) {
@@ -41,4 +41,7 @@ public class user {
         this.telephone = telephone;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
