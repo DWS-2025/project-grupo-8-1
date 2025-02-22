@@ -1,13 +1,13 @@
-package es.dws.gym.review;
+package es.dws.gym.gym.review;
 
 import java.sql.Date;
 
-public class review {
+public class Review {
     private int id;
     private String content;
     private Date date;
 
-    public review(int id, String content, Date date){
+    public Review(int id, String content, Date date){
         this.id = id;
         this.content = content;
         this.date = date;

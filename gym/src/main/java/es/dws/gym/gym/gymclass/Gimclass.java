@@ -1,15 +1,15 @@
-package es.dws.gym.gymclass;
+package es.dws.gym.gym.gymclass;
 
 import java.sql.Date;
 import java.sql.Time;
 
-public class gimclass {
+public class Gimclass {
     private String name;
     private String descrip;
     private Date time;
     private Time duration;
 
-    public gimclass(String name, String descript, Date time, Time duration){
+    public Gimclass(String name, String descript, Date time, Time duration){
         this.name = name;
         this.descrip = descript;
         this.time = time;

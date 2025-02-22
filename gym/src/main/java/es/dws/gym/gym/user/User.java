@@ -1,16 +1,28 @@
-package es.dws.gym.user;
+package es.dws.gym.gym.user;
 
-public class user {
+public class User {
+    private String firshName;
+    private String secondName;
     private String telephone;
     private String mail;
     private String address;
     private String password;
 
-    public user(int id, String telephone, String mail, String address, String password){
+    public User(String firshName, String secondName, String telephone, String mail, String address, String password){
+        this.firshName = firshName;
+        this.secondName = secondName;
         this.telephone = telephone;
         this.mail = mail;
         this.address = address;
         this.password = password;
+    }
+
+    public String getfirshName() {
+        return firshName;
+    }
+
+    public String getsecondName() {
+        return secondName;
     }
 
     public String getAddress() {
@@ -27,6 +39,14 @@ public class user {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setfirshName(String firshName) {
+        this.firshName = firshName;
+    }
+
+    public void setsecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public void setAddress(String address) {
