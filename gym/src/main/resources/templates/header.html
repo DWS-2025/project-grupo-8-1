@@ -15,7 +15,14 @@
                 <a href="/">home</a>
                 <a href="/membresias">Memberships</a>
                 <a href="/comentarios">review</a>
+                {{^user}}
                 <a href="/login">Login</a>
+                {{/user}}
+
+                {{#user}}
+                <a href="">Welcome, {{userName}} </a>
+                {{/user}}
+                
             </div>
         </div>
     </body>

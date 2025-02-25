@@ -1,5 +1,7 @@
 package es.dws.gym.gym.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class User {
     private String firstName;
     private String sureName;
@@ -8,7 +10,7 @@ public class User {
     private String address;
     private String password;
 
-    public User(String firstName, String sureName, String telephone, String mail, String address, String password){
+    public User(@JsonProperty("firstName") String firstName, @JsonProperty("sureName") String sureName,@JsonProperty("telephone") String telephone,@JsonProperty("mail") String mail,@JsonProperty("address") String address,@JsonProperty("password") String password){
         this.firstName = firstName;
         this.sureName = sureName;
         this.telephone = telephone;
@@ -47,10 +49,6 @@ public class User {
 
     public void setsureName(String sureName) {
         this.sureName = sureName;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public void setMail(String mail) {

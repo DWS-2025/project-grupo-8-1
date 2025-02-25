@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Service
 public class UserManager {
-    private Map <String,User> users = new HashMap<>();
+    private Map <String,User> users = new HashMap<String,User>();
 
     public UserManager(){
         loadUsersDisk();

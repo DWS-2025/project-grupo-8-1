@@ -42,6 +42,7 @@ body {
     margin-left: 60px;
     text-decoration: none;
     color: white;
+    white-space: nowrap;
 }
 
 .boton_black{
