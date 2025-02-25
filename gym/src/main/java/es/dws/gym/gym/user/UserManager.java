@@ -19,9 +19,9 @@ public class UserManager {
         loadUsersDisk();
     }
 
-    public boolean addUser(String userName, String firshName, String secondName, String telephone, String mail, String address, String password){
+    public boolean addUser(String userName, String firstName, String sureName, String telephone, String mail, String address, String password){
         if(!users.containsKey(userName)){
-            User user = new User(firshName, secondName,telephone,mail,address,password);
+            User user = new User(firstName, sureName,telephone,mail,address,password);
             this.users.put(userName,user);
             writeUsersDisk();
             return true;
