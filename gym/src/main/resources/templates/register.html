@@ -4,45 +4,45 @@
         <meta charset="UTF-8">
         <title>Register</title>
         <link rel="stylesheet" href="/css/genericStyles.css">
-        <link rel="stylesheet" href="/css/panelLogin.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
     </head>
     <body>
         {{>header}}
-        <form action="/register" method="POST">
+        <form action="/register" method="POST" class="panel">
             <h2>Register</h2>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="userName">User Name</label>
                 <input type="text" id="userName" name="userName" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="firstname">first name</label>
                 <input type="text" id="firstname" name="firstname" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="secondName">Second name</label>
                 <input type="text" id="secondName" name="secondName" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="telephone">mobile phone</label>
                 <input type="text" id="telephone" name="telephone" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="mail">email address</label>
                 <input type="email" id="mail" name="mail" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="address_home">address home</label>
                 <input type="text" id="address" name="address" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <label for="confirmPassword">confirm password</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
             </div>
-            <div class="form-group">
+            <div class="panel-group">
                 <input type="submit" class="boton_black" value="register">
             </div>
         </form>
