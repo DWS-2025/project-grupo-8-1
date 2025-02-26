@@ -1,4 +1,4 @@
-package es.dws.gym.gym.gymclass;
+package es.dws.gym.gym.model;
 
 import java.sql.Date;
 import java.sql.Time;

@@ -1,20 +1,20 @@
-package es.dws.gym.gym.review;
+package es.dws.gym.gym.model;
 
 import java.sql.Date;
 
 public class Review {
-    private int id;
+    private String userName;
     private String content;
     private Date date;
 
-    public Review(int id, String content, Date date){
-        this.id = id;
+    public Review(String userName, String content, Date date){
+        this.userName = userName;
         this.content = content;
         this.date = date;
     }
 
-    public int getId() {
-        return id;
+    public String getUserName() {
+        return userName;
     }
 
     public String getContent() {
@@ -27,6 +27,10 @@ public class Review {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setDate(Date date) {

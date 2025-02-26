@@ -1,4 +1,4 @@
-package es.dws.gym.gym.memberships;
+package es.dws.gym.gym.model;
 
 public class Memberships {
     private String name;

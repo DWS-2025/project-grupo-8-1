@@ -1,4 +1,4 @@
-package es.dws.gym.gym.user;
+package es.dws.gym.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
