@@ -2,6 +2,8 @@ package es.dws.gym.gym.manager;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -53,5 +55,15 @@ public class UserManager extends BaseManager {
 
     public boolean isUser(String name){
         return users.containsKey(name);
+    }
+
+    public List<String> getUserList(String name){
+        User user = getUser(name);
+        return user.getListUser();
+    }
+
+    public void setPassword(String name, String password){
+        users.get(name).setPassword(password);
+        writeToDisk(FilesWeb.USERSMAPFILE, this.users);
     }
 }

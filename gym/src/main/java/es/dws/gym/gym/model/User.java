@@ -1,5 +1,8 @@
 package es.dws.gym.gym.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
@@ -41,6 +44,16 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<String> getListUser(){
+        List<String> list = new ArrayList<>();
+        list.add(firstName);
+        list.add(sureName);
+        list.add(telephone);
+        list.add(mail);
+        list.add(address);
+        return list;
     }
 
     public void setfirstName(String firstName) {
