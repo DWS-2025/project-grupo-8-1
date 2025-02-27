@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Review</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        <div class="panel">
+            <h2>Review</h2>
+            {{#user}}
+            <a href="/review/add" class="boton_black">add view</a>
+            {{/user}}
+            {{#reviews}}
+            <ul>
+                <li>User: {{userName}}</li>
+                <li>Date: {{date}}</li>
+                <li>Review: {{content}}</li>
+            </ul>
+            {{/reviews}}
+        </div>
+        {{>footer}}
+    </body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Add review</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        <form action="/review/add" method="POST" class="panel">
+            <h2>Review</h2>
+            <div class="panel-group">
+                <label for="contenReview">New View</label>
+                <textarea id="contenReview" name="contenReview" rows="20" cols="100" required></textarea>
+            </div>
+            <div class="panel-group">
+                <input type="submit" class="boton_black" value="Create">
+            </div>
+        </form>
+        {{>footer}}
+    </body>
+</html>

@@ -1,15 +1,17 @@
 package es.dws.gym.gym.model;
 
-import java.time.LocalDateTime;
+
+
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Review {
     private String userName;
     private String content;
-    private LocalDateTime date;
+    private Date date;
 
-    public Review(@JsonProperty("userName") String userName,@JsonProperty("content") String content, @JsonProperty("date") LocalDateTime date){
+    public Review(@JsonProperty("userName") String userName,@JsonProperty("content") String content, @JsonProperty("date") Date date){
         this.userName = userName;
         this.content = content;
         this.date = date;
@@ -23,7 +25,7 @@ public class Review {
         return content;
     }
 
-    public LocalDateTime getLocalDateTime() {
+    public Date getlocalDateTime() {
         return date;
     }
 
@@ -35,7 +37,7 @@ public class Review {
         this.userName = userName;
     }
 
-    public void setLocalDateTime(LocalDateTime date) {
+    public void setLocalDateTime(Date date) {
         this.date = date;
     }
 }

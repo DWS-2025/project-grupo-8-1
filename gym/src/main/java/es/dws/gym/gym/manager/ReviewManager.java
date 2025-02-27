@@ -1,6 +1,9 @@
 package es.dws.gym.gym.manager;
 
-import java.time.LocalDateTime;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -20,8 +23,8 @@ public class ReviewManager extends BaseManager {
     }
 
     public void addReview(String userName, String content){
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Review newReview = new Review(userName, content, localDateTime);
+        Date date = new Date();
+        Review newReview = new Review(userName, content, date);
         this.reviewMap.put(contId, newReview);
         contId++;
         writeToDisk(FilesWeb.REVIEWMAPFILE, this.reviewMap);
@@ -37,5 +40,11 @@ public class ReviewManager extends BaseManager {
         return false;
     }
 
-    
+    public List<Review> listReview(){
+        List<Review> listReview = new ArrayList<>();
+        for(Map.Entry<Integer,Review> entry : reviewMap.entrySet()){
+            listReview.add(entry.getValue());
+        }
+        return listReview;
+    }
 }

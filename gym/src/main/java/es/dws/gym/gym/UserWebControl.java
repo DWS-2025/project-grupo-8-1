@@ -50,7 +50,7 @@ public class UserWebControl {
             return "error";
         }
         if(!password.equals(confirmPassword)){
-            model.addAttribute("error", "nn");
+            model.addAttribute("error", "WARNING: passwords do not match");
             model.addAttribute("error_redirect", "/register");
             return "error";
         }
