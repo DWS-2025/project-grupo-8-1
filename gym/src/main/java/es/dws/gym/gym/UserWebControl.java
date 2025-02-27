@@ -17,9 +17,11 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class UserWebControl {
     private UserManager userManager;
+    private boolean trueMessage;
 
     public UserWebControl(UserManager userManager){
         this.userManager = userManager;
+        this.trueMessage = false;
     }
 
     @GetMapping("/login")
@@ -81,6 +83,8 @@ public class UserWebControl {
         model.addAttribute("telephone", dataUser.get(2));
         model.addAttribute("mail", dataUser.get(3));
         model.addAttribute("address", dataUser.get(4));
+        model.addAttribute("password", isViewTrueMenssage());
+        model.addAttribute("message", "password changed correctly");
         return "homeUser";
     }
     
@@ -111,7 +115,15 @@ public class UserWebControl {
             return "error";
         }
         userManager.setPassword(login, password);
+        this.trueMessage = true;
         return "redirect:/home";
     }
     
+    private boolean isViewTrueMenssage(){
+        if(this.trueMessage){
+            trueMessage = false;
+            return true;
+        }
+        return false;
+    }
 }

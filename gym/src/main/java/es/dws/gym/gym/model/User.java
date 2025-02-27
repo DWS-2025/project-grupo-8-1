@@ -46,7 +46,7 @@ public class User {
         return password;
     }
 
-    public List<String> getListUser(){
+    public List<String> ListUser(){
         List<String> list = new ArrayList<>();
         list.add(firstName);
         list.add(sureName);

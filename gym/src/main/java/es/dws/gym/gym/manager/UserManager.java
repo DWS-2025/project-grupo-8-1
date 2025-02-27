@@ -59,7 +59,7 @@ public class UserManager extends BaseManager {
 
     public List<String> getUserList(String name){
         User user = getUser(name);
-        return user.getListUser();
+        return user.ListUser();
     }
 
     public void setPassword(String name, String password){

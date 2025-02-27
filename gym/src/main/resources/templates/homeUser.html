@@ -21,6 +21,9 @@
                 <li>address: {{address}} <button type="button">Change</button></li>
             </ul>
             <p><button type="button" onclick="chargePassword()">Change password</button></p>
+            {{#password}}
+            <p style="color: greenyellow;">{{message}}</p>
+            {{/password}}
             <p><button type="button" onclick="logout()">Logout</button></p>
         </div>
         {{>footer}}
