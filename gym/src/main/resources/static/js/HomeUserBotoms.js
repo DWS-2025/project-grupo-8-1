@@ -1,4 +1,4 @@
-function editUser(){
+function chargePassword(){
     window.location.href = "/newpassword";
 }
 

@@ -48,7 +48,7 @@ public class UserWebControl {
             return "error";
         }
         if(!password.equals(confirmPassword)){
-            model.addAttribute("error", "WARNING: passwords do not match");
+            model.addAttribute("error", "nn");
             model.addAttribute("error_redirect", "/register");
             return "error";
         }
@@ -101,11 +101,13 @@ public class UserWebControl {
     }
     
     @PostMapping("/newpassword")
-    public String changePassword(@CookieValue(value = "login", defaultValue = "") String login ,@RequestParam("password") String password, @RequestParam("confirmpassword") String confirmpassword) {
+    public String changePassword(@CookieValue(value = "login", defaultValue = "") String login ,@RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, Model model) {
         if(login.isEmpty()){
             return "redirect:/login";
         }        
-        if(!password.equals(confirmpassword)){
+        if(!password.equals(confirmPassword)){
+            model.addAttribute("error", "WARNING: passwords do not match");
+            model.addAttribute("error_redirect", "/newpassword");
             return "error";
         }
         userManager.setPassword(login, password);
