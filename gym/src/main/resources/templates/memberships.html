@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Memberships</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        <form action="/memberships" method="POST" class="panel">
+            <h2>Choose your plan</h2>
+
+            <div class="panel">
+                <div class="membresia">
+                    <h3>Monthly</h3>
+                    <p class="Prize ">29,99€</p>
+                    <p>Unlimited access to the gym during one month.</p>
+                    <button>Subscribe</button>
+                </div>
+
+                <div class="panel">
+                    <h3>Quarterly</h3>
+                    <p class="Prize ">79,99€</p>
+                    <p>Unlimited access to the gym during three month.</p>
+                    <button>Subscribe</button>
+                </div>
+
+                <div class="panel-memberships">
+                    <h3>Anual</h3>
+                    <p class="Prize ">249,99€</p>
+                    <p>Unlimited access to the gym during one year.</p>
+                    <button>Subscribe</button>
+                </div>
+            </div>
+        </form>
+        {{>footer}}
+    </body>
+</html>
