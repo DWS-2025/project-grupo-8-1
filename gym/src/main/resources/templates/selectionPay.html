@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Pay</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        <div class="panel">
+            <div class="panel-group">
+                <p><a href="/memberships/{{id}}/efective" class="boton_black">payment in cash</a></p>
+            </div>
+            <div class="panel-group">
+                <p><a href="/memberships/{{id}}/card" class="boton_black">credit card</a></p>
+            </div>
+        </div>
+        {{>footer}}
+    </body>
+</html>

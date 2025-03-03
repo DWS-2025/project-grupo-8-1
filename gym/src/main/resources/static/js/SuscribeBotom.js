@@ -1,3 +1,3 @@
 function subscribe(id){
-    window.location.href = "/membership/" + id;
+    window.location.href = "/memberships/" + id;
 }

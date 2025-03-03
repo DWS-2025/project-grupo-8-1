@@ -1,55 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Subscribe</title>
-    <link rel="stylesheet" href="/css/genericStyles.css">
-    <link rel="stylesheet" href="/css/panelForm.css">
-    <script src="/js/payment.js"></script>
-</head>
-<body>
-{{>header}}
-<form action="/subscribe" method="POST" class="panel">
-    <h2>Subscription Details</h2>
-
-    <div class="panel-group">
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name" required>
-    </div>
-
-    <div class="panel-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-    </div>
-
-    <div class="panel-group">
-        <label for="plan">Selected Plan:</label>
-        <select id="plan" name="plan" required>
-            <option value="monthly">Monthly - 29,99€</option>
-            <option value="quarterly">Quarterly - 79,99€</option>
-            <option value="annual">Annual - 249,99€</option>
-        </select>
-    </div>
-
-    <div class="panel-group">
-        <label for="card">Card Number:</label>
-        <input type="text" id="card" name="card" placeholder="**** **** **** ****" autocomplete="off" required>
-    </div>
-
-    <div class="panel-group">
-        <label for="expiry">Expiry Date:</label>
-        <input type="month" id="expiry" name="expiry" required>
-    </div>
-
-    <div class="panel-group">
-        <label for="cvv">CVV:</label>
-        <input type="text" id="cvv" name="cvv" maxlength="3" autocomplete="off" required>
-    </div>
-
-    <div class="panel-group">
-        <button type="submit" class="boton_black">Confirm Subscription</button>
-    </div>
-</form>
-{{>footer}}
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Subscribe</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        {{^card}}
+        <div class="panel">
+            <h3>successful action</h3>
+            <p><a href="/home" class="boton_black">home</a></p>
+        </div>
+        {{/card}}
+        {{#card}}
+        <form action="/memberships/{{id}}/card" method="POST" class="panel">
+            <h2>Payment Information</h2>
+    
+            <div class="panel-group">
+                <label for="name">Cardholder Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+    
+            <div class="panel-group">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" name="card-number" pattern="\d{16}" placeholder="1234567812345678" required>
+            </div>
+    
+            <div class="panel-group">
+                <label for="expiry">Expiration Date (MM/YY)</label>
+                <input type="text" id="expiry" name="expiry" pattern="\d{2}/\d{2}" placeholder="MM/YY" required>
+            </div>
+    
+            <div class="panel-group">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" name="cvv" pattern="\d{3}" placeholder="123" required>
+            </div>
+    
+            <div class="panel-group">
+                <button type="submit">Pay</button>
+            </div>
+        </form>
+        {{/card}}
+        {{>footer}}
+    </body>
 </html>

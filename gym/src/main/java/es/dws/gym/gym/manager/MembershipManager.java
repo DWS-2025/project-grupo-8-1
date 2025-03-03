@@ -27,4 +27,11 @@ public class MembershipManager extends BaseManager {
         }
         return listMemberships;
     }
+
+    public boolean isExistKey(Integer key){
+        if(mebershipsMap.containsKey(key)){
+            return true;
+        }
+        return false;
+    }
 }

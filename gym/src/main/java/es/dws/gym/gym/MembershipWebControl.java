@@ -4,11 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.dws.gym.gym.manager.MembershipManager;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class MembershipWebControl {
@@ -33,6 +36,58 @@ public class MembershipWebControl {
         return "memberships";
     }
 
+    @GetMapping("/memberships/{id}")
+    public String showSelectionPay(@PathVariable Integer id ,@CookieValue(value = "login", defaultValue = "") String login, Model model){
+        if(login.isEmpty()){
+            return "redirect:/login";
+        }
+        if(!membresiaManager.isExistKey(id)){
+            return "redirect:/memberships";
+        }
+        model.addAttribute("userName", login);
+        model.addAttribute("id", id);
+        return "selectionPay";
+    }
+
+    @GetMapping("/memberships/{id}/efective")
+    public String payEfective(@PathVariable Integer id ,@CookieValue(value = "login", defaultValue = "") String login, Model model) {
+        if(login.isEmpty()){
+            return "redirect:/login";
+        }
+        if(!membresiaManager.isExistKey(id)){
+            return "redirect:/memberships";
+        }
+        model.addAttribute("userName", login);
+        model.addAttribute("card", false);
+        return "subscribe";
+    }
+    
+    @GetMapping("/memberships/{id}/card")
+    public String payCard(@PathVariable Integer id ,@CookieValue(value = "login", defaultValue = "") String login, Model model) {
+        if(login.isEmpty()){
+            return "redirect:/login";
+        }
+        if(!membresiaManager.isExistKey(id)){
+            return "redirect:/memberships";
+        }
+        model.addAttribute("userName", login);
+        model.addAttribute("card", true);
+        return "subscribe";
+    }
+
+    @PostMapping("/memberships/{id}/card")
+    public String postMethodName(@PathVariable Integer id ,@CookieValue(value = "login", defaultValue = "") String login, Model model) {
+        if(login.isEmpty()){
+            return "redirect:/login";
+        }
+        if(!membresiaManager.isExistKey(id)){
+            return "redirect:/memberships";
+        }
+        model.addAttribute("userName", login);
+        model.addAttribute("card", false);
+        return "subscribe";
+    }
+    
     
 /*
     @PostMapping("/memberships/subscribe")
