@@ -1,14 +1,22 @@
 package es.dws.gym.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Memberships {
+    private Integer id;
     private String name;
     private float pay;
-    private int typeMemberships;
+    private Integer typeMemberships;
 
-    public Memberships(String name, float pay, int typeMemberships){
+    public Memberships(@JsonProperty("id") Integer id,@JsonProperty("name") String name,@JsonProperty("pay") float pay,@JsonProperty("typeMemberships") Integer typeMemberships){
+        this.id = id;
         this.name = name;
         this.pay = pay;
         this.typeMemberships = typeMemberships;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -23,6 +31,10 @@ public class Memberships {
         return typeMemberships;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }

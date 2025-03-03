@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.dws.gym.gym.manager.MembershipManager;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -29,11 +28,13 @@ public class MembershipWebControl {
             model.addAttribute("userName", login);  // Mostrar el nombre del usuario si está autenticado
         }
 
-        model.addAttribute("membershipPlans", membresiaManager.getAvailablePlans());
+        model.addAttribute("membershipPlans", membresiaManager.listMemberships()); //Trae todos los objetos membresias de la base de datos json
 
         return "memberships";
     }
 
+    
+/*
     @PostMapping("/memberships/subscribe")
     public String subscribeMembership(@CookieValue(value = "login", defaultValue = "") String login,
                                       @RequestParam String membershipType, Model model, HttpServletResponse response) {
@@ -55,6 +56,7 @@ public class MembershipWebControl {
             return "error"; // Mostrar error en caso de fallo
         }
     }
+        */
 }
 
 

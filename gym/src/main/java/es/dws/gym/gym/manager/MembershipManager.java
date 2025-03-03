@@ -1,38 +1,30 @@
 package es.dws.gym.gym.manager;
 
+import es.dws.gym.gym.FilesWeb;
 import es.dws.gym.gym.model.Memberships;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 
 @Service
-public class MembershipManager {
+public class MembershipManager extends BaseManager {
+    private Map<Integer,Memberships> mebershipsMap;
+    private Integer mebershipsID;
 
-    // Lista de planes de membresía
-    private List<Memberships> membershipPlans;
-
-    public MembershipManager() {
-        membershipPlans = new ArrayList<>();
-        membershipPlans.add(new Memberships("Monthly", 29.99f, 1));
-        membershipPlans.add(new Memberships("Quarterly", 79.99f, 2));
-        membershipPlans.add(new Memberships("Anual", 249.99f, 3));
+    public MembershipManager(){
+        this.mebershipsMap = readFromDisk(FilesWeb.MEMBRERSHIPSMAPFILE, new TypeReference<Map<Integer,Memberships>>(){});
+        this.mebershipsID = readFromDisk(FilesWeb.MEMBRERSHIPSIDFILE, new TypeReference<Integer>() {});
     }
 
-
-    public List<Memberships> getAvailablePlans() {
-        return membershipPlans;
-    }
-
-
-    public boolean subscribeUserToPlan(String userName, int typeMemberships) {
-        for (Memberships plan : membershipPlans) {
-            if (plan.gettypeMemberships() == typeMemberships) {
-                System.out.println(userName + " has subscribed to the " + plan.getName() + " plan.");
-                return true;
-            }
+    public List<Memberships> listMemberships(){
+        List<Memberships> listMemberships = new ArrayList<>();
+        for(Map.Entry<Integer,Memberships> entry : mebershipsMap.entrySet()){
+            listMemberships.add(entry.getValue());
         }
-        return false;
+        return listMemberships;
     }
-
 }

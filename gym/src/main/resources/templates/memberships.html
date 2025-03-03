@@ -9,29 +9,16 @@
 </head>
 <body>
 {{>header}}
-    <h2>Choose your plan</h2>
-
     <div class="panel">
+        <h2>Choose your plan</h2>
+        {{#membershipPlans}}
         <ul>
-            <li>
-                <h3>Monthly</h3>
-                <p class="Prize">29,99€</p>
-                <p>Unlimited access to the gym during one month.</p>
-                <p><button type="button" onclick="payment()">Suscribe</button></p>
-            </li>
-            <li>
-                <h3>Quarterly</h3>
-                <p class="Prize">79,99€</p>
-                <p>Unlimited access to the gym during three months.</p>
-                <p><button type="button" onclick="payment()">Suscribe</button></p>
-            </li>
-            <li>
-                <h3>Annual</h3>
-                <p class="Prize">249,99€</p>
-                <p>Unlimited access to the gym during one year.</p>
-                <p><button type="button" onclick="payment()">Suscribe</button></p>
-            </li>
+            <li>Name: {{name}}</li>
+            <li>Prize: {{pay}}&euro;</li>
+            <li><p>Unlimited access to the gym during three months.</p></li>
         </ul>
+        <p><button type="button" onclick="suscribe('{{id}}')">Suscribe</button></p>
+        {{/membershipPlans}}
     </div>
 {{>footer}}
 </body>
