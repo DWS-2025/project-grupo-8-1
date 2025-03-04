@@ -11,10 +11,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import es.dws.gym.gym.FilesWeb;
 import es.dws.gym.gym.model.Review;
 
-/**
- * ReviewManager is responsible for managing user reviews.
- * It allows adding, removing, and listing reviews while storing them in a persistent file.
- */
+// ReviewManager is responsible for managing user reviews.
+//It allows adding, removing, and listing reviews while storing them in a persistent file.
+
 @Service
 public class ReviewManager extends BaseManager {
 
@@ -24,22 +23,14 @@ public class ReviewManager extends BaseManager {
     // Counter to track the latest review ID
     private Integer contId;
 
-    /**
-     * Constructor for ReviewManager.
-     * Loads existing reviews and the last used review ID from storage.
-     */
+
+    // Constructor for ReviewManager.
     public ReviewManager() {
         this.reviewMap = readFromDisk(FilesWeb.REVIEWMAPFILE, new TypeReference<Map<Integer, Review>>() {});
         this.contId = readFromDisk(FilesWeb.REVIEWIDCONTFILE, new TypeReference<Integer>() {});
     }
 
-    /**
-     * Adds a new review with the given username and content.
-     * The review is assigned a unique ID and stored persistently.
-     *
-     * @param userName The name of the user submitting the review.
-     * @param content  The content of the review.
-     */
+    // Adds a new review with the given username and content.
     public void addReview(String userName, String content) {
         Date date = new Date(); // Capture the current date
         Review newReview = new Review(userName, content, date);
@@ -53,13 +44,7 @@ public class ReviewManager extends BaseManager {
         writeToDisk(FilesWeb.REVIEWIDCONTFILE, this.contId);
     }
 
-    /**
-     * Removes a review from the system using its ID.
-     * If the review exists, it is deleted and the updated data is saved.
-     *
-     * @param reviewId The ID of the review to remove.
-     * @return True if the review was found and removed, false otherwise.
-     */
+    // Removes a review from the system using its ID.
     public boolean removeReview(Integer reviewId) {
         if (reviewMap.containsKey(reviewId)) {
             reviewMap.remove(reviewId);
@@ -69,11 +54,7 @@ public class ReviewManager extends BaseManager {
         return false;
     }
 
-    /**
-     * Retrieves a list of all stored reviews.
-     *
-     * @return A list containing all reviews.
-     */
+    // Retrieves a list of all stored reviews.
     public List<Review> listReview() {
         List<Review> listReview = new ArrayList<>();
         for (Map.Entry<Integer, Review> entry : reviewMap.entrySet()) {

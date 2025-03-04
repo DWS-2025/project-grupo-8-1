@@ -22,13 +22,12 @@ public class MembershipWebControl {
     @GetMapping("/memberships")
     public String showMemberships(@CookieValue(value = "login", defaultValue = "") String login, Model model) {
         if (login.isEmpty()) {
-            model.addAttribute("user", false);  // If the user is not authenticated
+            model.addAttribute("user", false);
         } else {
             model.addAttribute("user", true);
-            model.addAttribute("userName", login);  // Display the user's name if authenticated
+            model.addAttribute("userName", login);
         }
 
-        // Add the list of membership plans to the model
         model.addAttribute("membershipPlans", membresiaManager.listMemberships());
 
         return "memberships";
@@ -38,56 +37,56 @@ public class MembershipWebControl {
     @GetMapping("/memberships/{id}")
     public String showSelectionPay(@PathVariable Integer id, @CookieValue(value = "login", defaultValue = "") String login, Model model) {
         if (login.isEmpty()) {
-            return "redirect:/login";  // Redirect to login page if user is not authenticated
+            return "redirect:/login";
         }
         if (!membresiaManager.isExistKey(id)) {
-            return "redirect:/memberships";  // Redirect to memberships page if membership plan doesn't exist
+            return "redirect:/memberships";
         }
         model.addAttribute("userName", login);
         model.addAttribute("id", id);
-        return "selectionPay";  // Show the payment selection page
+        return "selectionPay";
     }
 
     // Redirect to the subscription page for effective payment method
     @GetMapping("/memberships/{id}/efective")
     public String payEfective(@PathVariable Integer id, @CookieValue(value = "login", defaultValue = "") String login, Model model) {
         if (login.isEmpty()) {
-            return "redirect:/login";  // Redirect to login page if user is not authenticated
+            return "redirect:/login";
         }
         if (!membresiaManager.isExistKey(id)) {
-            return "redirect:/memberships";  // Redirect to memberships page if membership plan doesn't exist
+            return "redirect:/memberships";
         }
         model.addAttribute("userName", login);
-        model.addAttribute("card", false);  // Specify that it's an effective payment method
-        return "subscribe";  // Show the subscription page
+        model.addAttribute("card", false);
+        return "subscribe";
     }
 
     // Redirect to the subscription page for card payment method
     @GetMapping("/memberships/{id}/card")
     public String payCard(@PathVariable Integer id, @CookieValue(value = "login", defaultValue = "") String login, Model model) {
         if (login.isEmpty()) {
-            return "redirect:/login";  // Redirect to login page if user is not authenticated
+            return "redirect:/login";
         }
         if (!membresiaManager.isExistKey(id)) {
-            return "redirect:/memberships";  // Redirect to memberships page if membership plan doesn't exist
+            return "redirect:/memberships";
         }
         model.addAttribute("userName", login);
-        model.addAttribute("card", true);  // Specify that it's a card payment method
-        return "subscribe";  // Show the subscription page
+        model.addAttribute("card", true);
+        return "subscribe";
     }
 
     // Post method to handle card payment
     @PostMapping("/memberships/{id}/card")
     public String postMethodName(@PathVariable Integer id, @CookieValue(value = "login", defaultValue = "") String login, Model model) {
         if (login.isEmpty()) {
-            return "redirect:/login";  // Redirect to login page if user is not authenticated
+            return "redirect:/login";
         }
         if (!membresiaManager.isExistKey(id)) {
-            return "redirect:/memberships";  // Redirect to memberships page if membership plan doesn't exist
+            return "redirect:/memberships";
         }
         model.addAttribute("userName", login);
-        model.addAttribute("card", false);  // Specify that it's not a card payment method
-        return "subscribe";  // Show the subscription page
+        model.addAttribute("card", false);
+        return "subscribe";
     }
 }
 

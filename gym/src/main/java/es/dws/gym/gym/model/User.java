@@ -105,11 +105,7 @@ public class User {
         return password;
     }
 
-    /**
-     * Returns a list of user details.
-     *
-     * @return A list containing the user's personal information.
-     */
+    // Returns a list of user details.
     public List<String> listUser() {
         List<String> list = new ArrayList<>();
         list.add(firstName);
@@ -120,47 +116,32 @@ public class User {
         return list;
     }
 
-    /**
-     * Updates the user's first name.
-     *
-     * @param firstName The new first name.
-     */
+
+    //Updates the user's first name.
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    /**
-     * Updates the user's surname.
-     *
-     * @param sureName The new surname.
-     */
+
+    //Updates the user's surname.
     public void setSureName(String sureName) {
         this.sureName = sureName;
     }
 
-    /**
-     * Updates the user's email.
-     *
-     * @param mail The new email address.
-     */
+
+    //Updates the user's email.
     public void setMail(String mail) {
         this.mail = mail;
     }
 
-    /**
-     * Updates the user's telephone number.
-     *
-     * @param telephone The new telephone number.
-     */
+
+    //Updates the user's telephone number.
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
 
-    /**
-     * Updates the user's password.
-     *
-     * @param password The new password.
-     */
+
+    // Updates the user's password.
     public void setPassword(String password) {
         this.password = password;
     }

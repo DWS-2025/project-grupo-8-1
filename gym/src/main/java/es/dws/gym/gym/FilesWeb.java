@@ -1,9 +1,6 @@
 package es.dws.gym.gym;
 
-/**
- * This class defines constants representing file paths used for storing
- * and retrieving data related to users, reviews, memberships, and classes.
- */
+//This class defines constants representing file paths used for storing and retrieving data related to users, reviews, memberships, and classes.
 public class FilesWeb {
 
     // File path for storing user data as a map

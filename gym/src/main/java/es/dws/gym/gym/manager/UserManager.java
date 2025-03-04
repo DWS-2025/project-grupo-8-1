@@ -10,36 +10,22 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import es.dws.gym.gym.FilesWeb;
 import es.dws.gym.gym.model.User;
 
-/**
- * UserManager is responsible for handling user-related operations.
- * It allows adding, removing, retrieving, and authenticating users.
- */
+// UserManager is responsible for handling user-related operations.
+//It allows adding, removing, retrieving, and authenticating users.
+
 @Service
 public class UserManager extends BaseManager {
 
     // Stores users mapped by their usernames
     private Map<String, User> users = new HashMap<>();
 
-    /**
-     * Constructor for UserManager.
-     * Loads existing users from storage.
-     */
+
+    // Constructor for UserManager.
     public UserManager() {
         this.users = readFromDisk(FilesWeb.USERSMAPFILE, new TypeReference<Map<String, User>>() {});
     }
 
-    /**
-     * Adds a new user to the system if the username is not already taken.
-     *
-     * @param userName  The unique username for the user.
-     * @param firstName The user's first name.
-     * @param sureName  The user's surname.
-     * @param telephone The user's phone number.
-     * @param mail      The user's email address.
-     * @param address   The user's home address.
-     * @param password  The user's password.
-     * @return True if the user was successfully added, false if the username is already in use.
-     */
+    // Adds a new user to the system if the username is not already taken.
     public boolean addUser(String userName, String firstName, String sureName, String telephone, String mail, String address, String password) {
         if (!users.containsKey(userName)) {
             User user = new User(firstName, sureName, telephone, mail, address, password);
@@ -50,12 +36,7 @@ public class UserManager extends BaseManager {
         return false;
     }
 
-    /**
-     * Removes a user from the system.
-     *
-     * @param userName The username of the user to be removed.
-     * @return True if the user was found and removed, false otherwise.
-     */
+    //Removes a user from the system.
     public boolean removeUser(String userName) {
         if (users.containsKey(userName)) {
             this.users.remove(userName);
@@ -65,13 +46,7 @@ public class UserManager extends BaseManager {
         return false;
     }
 
-    /**
-     * Authenticates a user by checking if the username and password match.
-     *
-     * @param name     The username of the user.
-     * @param password The password provided for authentication.
-     * @return True if the credentials are correct, false otherwise.
-     */
+    // Authenticates a user by checking if the username and password match.
     public boolean login(String name, String password) {
         if (!users.containsKey(name)) {
             return false;
@@ -80,43 +55,23 @@ public class UserManager extends BaseManager {
         return user.getPassword().equals(password);
     }
 
-    /**
-     * Retrieves a user by their username.
-     *
-     * @param name The username of the user.
-     * @return The User object if found, otherwise null.
-     */
+    //Retrieves a user by their username.
     public User getUser(String name) {
         return this.users.get(name);
     }
 
-    /**
-     * Checks if a user exists in the system.
-     *
-     * @param name The username to check.
-     * @return True if the user exists, false otherwise.
-     */
+    // Checks if a user exists in the system.
     public boolean isUser(String name) {
         return users.containsKey(name);
     }
 
-    /**
-     * Retrieves a list of user details.
-     *
-     * @param name The username of the user.
-     * @return A list containing user information.
-     */
+    // Retrieves a list of user details.
     public List<String> getUserList(String name) {
         User user = getUser(name);
         return user.listUser();
     }
 
-    /**
-     * Updates the password of a user.
-     *
-     * @param name     The username of the user.
-     * @param password The new password to set.
-     */
+    // Updates the password of a user.
     public void setPassword(String name, String password) {
         users.get(name).setPassword(password);
         writeToDisk(FilesWeb.USERSMAPFILE, this.users);

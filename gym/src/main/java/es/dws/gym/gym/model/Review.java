@@ -3,9 +3,8 @@ package es.dws.gym.gym.model;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Represents a user review with details such as username, content, and date of review.
- */
+
+// Represents a user review with details such as username, content, and date of review.
 public class Review {
 
     // The username of the person who wrote the review
@@ -17,13 +16,7 @@ public class Review {
     // The date when the review was posted
     private Date date;
 
-    /**
-     * Constructor to initialize a review.
-     *
-     * @param userName The username of the reviewer.
-     * @param content  The content of the review.
-     * @param date     The date when the review was posted.
-     */
+    //Constructor to initialize a review.
     public Review(@JsonProperty("userName") String userName,
                   @JsonProperty("content") String content,
                   @JsonProperty("date") Date date) {
@@ -32,56 +25,37 @@ public class Review {
         this.date = date;
     }
 
-    /**
-     * Retrieves the username of the reviewer.
-     *
-     * @return The username.
-     */
+
+    //Retrieves the username of the reviewer.
     public String getUserName() {
         return userName;
     }
 
-    /**
-     * Retrieves the content of the review.
-     *
-     * @return The review content.
-     */
+
+    // Retrieves the content of the review.
     public String getContent() {
         return content;
     }
 
-    /**
-     * Retrieves the date when the review was posted.
-     *
-     * @return The review date.
-     */
+
+    // Retrieves the date when the review was posted.
     public Date getLocalDateTime() {
         return date;
     }
 
-    /**
-     * Updates the content of the review.
-     *
-     * @param content The new review content.
-     */
+    // Updates the content of the review.
     public void setContent(String content) {
         this.content = content;
     }
 
-    /**
-     * Updates the username of the reviewer.
-     *
-     * @param userName The new username.
-     */
+
+    //Updates the username of the reviewer.
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    /**
-     * Updates the date of the review.
-     *
-     * @param date The new review date.
-     */
+
+    //Updates the date of the review.
     public void setLocalDateTime(Date date) {
         this.date = date;
     }
