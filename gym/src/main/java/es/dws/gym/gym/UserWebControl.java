@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.dws.gym.gym.manager.GimClassManager;
 import es.dws.gym.gym.manager.UserManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,14 +24,16 @@ public class UserWebControl {
 
     // Instance variable for managing user operations
     private UserManager userManager;
+    private GimClassManager gimClassManager;
 
     // A flag to track whether the password was successfully changed
     private boolean trueMessage;
 
 
     //Constructor to initialize the UserWebControl class with a UserManager instance.
-    public UserWebControl(UserManager userManager){
+    public UserWebControl(UserManager userManager, GimClassManager gimClassManager){
         this.userManager = userManager;
+        this.gimClassManager = gimClassManager;
         this.trueMessage = false;
     }
 
@@ -108,6 +111,7 @@ public class UserWebControl {
 
         model.addAttribute("password", isViewTrueMenssage());
         model.addAttribute("message", "password changed correctly");
+        model.addAttribute("classGim", gimClassManager.listGimClass());
         return "homeUser";  // Return the homepage view for the user
     }
 
@@ -158,4 +162,5 @@ public class UserWebControl {
         }
         return false;
     }
+    
 }

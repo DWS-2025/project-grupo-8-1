@@ -3,9 +3,11 @@ package es.dws.gym.gym.model;
 import java.sql.Date;
 import java.sql.Time;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 // Represents a gym class with its details such as name, description, schedule, and duration.
 public class Gimclass {
-
+    
     // Name of the gym class
     private String name;
 
@@ -20,7 +22,7 @@ public class Gimclass {
 
 
     //Constructor to initialize a gym class.
-    public Gimclass(String name, String descript, Date time, Time duration) {
+    public Gimclass(@JsonProperty("name") String name,@JsonProperty("descript") String descript,@JsonProperty("time") Date time,@JsonProperty("duration") Time duration) {
         this.name = name;
         this.descrip = descript;
         this.time = time;

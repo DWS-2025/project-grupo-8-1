@@ -22,6 +22,6 @@ public class FilesWeb {
     public static final String CLASSMAPFILE = "files/classMap.json";
 
     // File path for storing the gym class ID counter (note: possible typo in "file/")
-    public static final String CLASSIDFILE = "file/classID.json"; // Should this be "files/classID.json"?
+    public static final String CLASSIDFILE = "files/classID.json"; // Should this be "files/classID.json"?
 }
 

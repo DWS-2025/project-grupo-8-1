@@ -25,6 +25,16 @@
             <p style="color: greenyellow;">{{message}}</p>
             {{/password}}
             <p><button type="button" onclick="logout()">Logout</button></p>
+            <h3>Gim Class</h3>
+            {{#classGim}}
+            <ul>
+                <li>Name: {{name}}</li>
+                <li>Description: {{descrip}}</li>
+                <li>Date: {{time}}</li>
+                <li>Time: {{duration}}</li>
+            </ul>
+            <p><button type="button" onclick="alert('user successfully registered')">Register</button></p>
+            {{/classGim}}
         </div>
         {{>footer}}
     </body>
