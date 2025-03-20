@@ -2,12 +2,25 @@ package es.dws.gym.gym.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 /**
  * Represents a user with personal details such as name, contact information, and password.
  */
-public class User {
+
+@Entity(name="webUser")
+ public class User {
+    
+    @Id
+    @Column(unique = true, nullable = false)
+    // User's username
+    private String id;
 
     // User's first name
     private String firstName;
@@ -26,96 +39,70 @@ public class User {
 
     // User's password
     private String password;
+    
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
-    /**
-     * Constructor to initialize a User object.
-     *
-     * @param firstName The first name of the user.
-     * @param sureName  The surname of the user.
-     * @param telephone The user's telephone number.
-     * @param mail      The user's email address.
-     * @param address   The user's physical address.
-     * @param password  The user's password.
-     */
-    public User(@JsonProperty("firstName") String firstName,
-                @JsonProperty("sureName") String sureName,
-                @JsonProperty("telephone") String telephone,
-                @JsonProperty("mail") String mail,
-                @JsonProperty("address") String address,
-                @JsonProperty("password") String password) {
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Gimclass> gimclass;
+
+    public User(){}
+
+    // Constructor to initialize a User object.
+    public User(String id, String firstName, String sureName, String telephone, String mail, String address, String password) {
+        this.id = id;
         this.firstName = firstName;
         this.sureName = sureName;
         this.telephone = telephone;
         this.mail = mail;
         this.address = address;
         this.password = password;
+        this.reviews = new ArrayList<Review>();
+        this.gimclass = new ArrayList<Gimclass>();
     }
 
-    /**
-     * Retrieves the user's first name.
-     *
-     * @return The first name.
-     */
+
+    public String getId() {
+        return id;
+    }
+
+    //Retrieves the user's first name.
     public String getFirstName() {
         return firstName;
     }
 
-    /**
-     * Retrieves the user's surname.
-     *
-     * @return The surname.
-     */
+    //Retrieves the user's surname.
     public String getSureName() {
         return sureName;
     }
 
-    /**
-     * Retrieves the user's address.
-     *
-     * @return The physical address.
-     */
+    //Retrieves the user's address.
     public String getAddress() {
         return address;
     }
 
-    /**
-     * Retrieves the user's email.
-     *
-     * @return The email address.
-     */
+    //Retrieves the user's email.
     public String getMail() {
         return mail;
     }
 
-    /**
-     * Retrieves the user's telephone number.
-     *
-     * @return The telephone number.
-     */
+    //Retrieves the user's telephone number.
     public String getTelephone() {
         return telephone;
     }
 
-    /**
-     * Retrieves the user's password.
-     *
-     * @return The password.
-     */
+    //Retrieves the user's password.
     public String getPassword() {
         return password;
     }
 
-    // Returns a list of user details.
-    public List<String> listUser() {
-        List<String> list = new ArrayList<>();
-        list.add(firstName);
-        list.add(sureName);
-        list.add(telephone);
-        list.add(mail);
-        list.add(address);
-        return list;
+    public List<Review> getReviews(){
+        return reviews;
     }
 
+    public List<Gimclass> getGimClass(){
+        return gimclass;
+    }
 
     //Updates the user's first name.
     public void setFirstName(String firstName) {
@@ -145,4 +132,18 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    // Updates the user's address.
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setReviews(List<Review> reviews){
+        this.reviews = reviews;
+    }
+
+    public void setGimClass(List<Gimclass> gimclasses){
+        this.gimclass = gimclasses;
+    }
+
 }

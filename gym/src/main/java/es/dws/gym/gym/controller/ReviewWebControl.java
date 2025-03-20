@@ -1,9 +1,9 @@
-package es.dws.gym.gym;
+package es.dws.gym.gym.controller;
+import es.dws.gym.gym.service.ReviewService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
-import es.dws.gym.gym.manager.ReviewManager;
 
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 // This class handles the review-related views and operations.
 @Controller
 public class ReviewWebControl {
-    private ReviewManager reviewManager;
 
-    //Constructor to inject the ReviewManager dependency.
-    public ReviewWebControl(ReviewManager reviewManager){
-        this.reviewManager = reviewManager;
-    }
-
+    @Autowired
+    private ReviewService reviewService;
+    
     // This method handles GET requests for the "/review" page.It checks the login status of the user and passes the list of reviews to the view for rendering.
     @GetMapping("/review")
     public String review(@CookieValue(value = "login", defaultValue = "") String login, Model model) {
@@ -32,7 +29,7 @@ public class ReviewWebControl {
             model.addAttribute("userName", login);
         }
 
-        model.addAttribute("reviews", reviewManager.listReview());
+        model.addAttribute("reviews", reviewService.getAllReviews());
         return "review";
     }
 
@@ -51,7 +48,7 @@ public class ReviewWebControl {
     @PostMapping("/review/add")
     public String createReview(@CookieValue(value = "login", defaultValue = "") String login, @RequestParam String contenReview) {
 
-        reviewManager.addReview(login, contenReview);
+        reviewService.addReview(login, contenReview);;
         return "redirect:/review";
     }
 }

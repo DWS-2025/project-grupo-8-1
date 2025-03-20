@@ -1,7 +1,6 @@
-package es.dws.gym.gym;
+package es.dws.gym.gym.controller;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -9,34 +8,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import es.dws.gym.gym.manager.GimClassManager;
-import es.dws.gym.gym.manager.UserManager;
+import es.dws.gym.gym.model.User;
+import es.dws.gym.gym.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * This class serves as the controller for handling user-related operations
  * such as login, registration, updating passwords, and managing user sessions.
- * It interacts with the UserManager to manage user data and operations.
+ * It interacts with the UserService to manage user data and operations.
  */
 @Controller
 public class UserWebControl {
 
     // Instance variable for managing user operations
-    private UserManager userManager;
-    private GimClassManager gimClassManager;
+    @Autowired
+    private UserService userService;
 
     // A flag to track whether the password was successfully changed
     private boolean trueMessage;
-
-
-    //Constructor to initialize the UserWebControl class with a UserManager instance.
-    public UserWebControl(UserManager userManager, GimClassManager gimClassManager){
-        this.userManager = userManager;
-        this.gimClassManager = gimClassManager;
-        this.trueMessage = false;
-    }
-
 
     //Handles GET requests to the login page. If the user is already logged in,they are redirected to the homepage.
     @GetMapping("/login")
@@ -63,7 +53,7 @@ public class UserWebControl {
     // Handles POST requests to register a new user. It checks if the username is available and whether the password and confirmation match before adding the new user.
     @PostMapping("/register")
     public String newregister(@RequestParam String userName, @RequestParam String firstname, @RequestParam String secondName, @RequestParam String telephone,@RequestParam String mail, @RequestParam String address, @RequestParam String password, @RequestParam String confirmPassword, Model model) {
-        if(userManager.isUser(userName)){
+        if(userService.isUser(userName)){
             model.addAttribute("error", "Existing user name, please try with a different name");
             model.addAttribute("error_redirect", "/register");
             return "error";  // Return error if username is already taken
@@ -74,7 +64,7 @@ public class UserWebControl {
             model.addAttribute("error_redirect", "/register");
             return "error";
         }
-        userManager.addUser(userName, firstname, secondName, telephone, mail, address, password);
+        userService.addUser(userName, firstname, secondName, telephone, mail, address, password);
         return "redirect:/login";
     }
 
@@ -82,8 +72,8 @@ public class UserWebControl {
     // Handles POST requests to log in a user. It checks if the provided username and password are valid and sets a login cookie if successful.
     @PostMapping("/login")
     public String loadLogin(@RequestParam String userName, @RequestParam String password, Model model, HttpServletResponse response) {
-
-        if(!userManager.login(userName, password)){
+        User user = userService.getUser(userName);
+        if(user == null && !user.getPassword().equals(password)){
             model.addAttribute("error", "the user or password is not correct");
             model.addAttribute("error_redirect", "/login");
             return "error";
@@ -99,19 +89,8 @@ public class UserWebControl {
         if(login.isEmpty()){
             return "redirect:/login";
         }
-        model.addAttribute("user", true);
+        model.addAttribute("user", userService.getUser(login));
         model.addAttribute("userName", login);
-
-        List<String> dataUser = userManager.getUserList(login);
-        model.addAttribute("firstName", dataUser.get(0));
-        model.addAttribute("sureName", dataUser.get(1));
-        model.addAttribute("telephone", dataUser.get(2));
-        model.addAttribute("mail", dataUser.get(3));
-        model.addAttribute("address", dataUser.get(4));
-
-        model.addAttribute("password", isViewTrueMenssage());
-        model.addAttribute("message", "password changed correctly");
-        model.addAttribute("classGim", gimClassManager.listGimClass());
         return "homeUser";  // Return the homepage view for the user
     }
 
@@ -147,8 +126,8 @@ public class UserWebControl {
             model.addAttribute("error_redirect", "/newpassword");
             return "error";
         }
-
-        userManager.setPassword(login, password);
+        
+        userService.setPassword(login, password);
         this.trueMessage = true;
         return "redirect:/home";
     }

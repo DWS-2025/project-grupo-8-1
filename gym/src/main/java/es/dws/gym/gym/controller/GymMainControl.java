@@ -1,4 +1,4 @@
-package es.dws.gym.gym;
+package es.dws.gym.gym.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * appropriate information to the model for rendering the "index" view.
  */
 @Controller
-public class GymMainView {
+public class GymMainControl {
 
 
     //This method handles GET requests to the root URL ("/").It checks the "login" cookie to determine if the user is logged in, and sets the "user" and "userName" attributes accordingly in the model.

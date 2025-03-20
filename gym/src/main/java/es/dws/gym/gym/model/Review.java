@@ -1,14 +1,22 @@
 package es.dws.gym.gym.model;
 
-import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.sql.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
-
+@Entity(name="webReview")
 // Represents a user review with details such as username, content, and date of review.
 public class Review {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    // The username of the person who wrote the review
-    private String userName;
+    @ManyToOne
+    private User users;
 
     // The content of the review
     private String content;
@@ -16,19 +24,12 @@ public class Review {
     // The date when the review was posted
     private Date date;
 
+    public Review(){}
+
     //Constructor to initialize a review.
-    public Review(@JsonProperty("userName") String userName,
-                  @JsonProperty("content") String content,
-                  @JsonProperty("date") Date date) {
-        this.userName = userName;
+    public Review(String content, Date date) {
         this.content = content;
         this.date = date;
-    }
-
-
-    //Retrieves the username of the reviewer.
-    public String getUserName() {
-        return userName;
     }
 
 
@@ -49,14 +50,16 @@ public class Review {
     }
 
 
-    //Updates the username of the reviewer.
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-
     //Updates the date of the review.
     public void setLocalDateTime(Date date) {
         this.date = date;
+    }
+
+    public User getUser(){
+        return users;
+    }
+
+    public void setUser(User users){
+        this.users = users;
     }
 }

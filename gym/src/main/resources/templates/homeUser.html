@@ -13,12 +13,14 @@
             <h2>Home user</h2>
             <h3>user information</h3>
             <ul>
+                {{#user}}
                 <li>User Name: {{userName}}</li>
                 <li>First Name: {{firstName}} <button type="button">Change</button></li>
                 <li>Sure Name: {{sureName}} <button type="button">Change</button></li>
                 <li>telephone: {{telephone}} <button type="button">Change</button></li>
                 <li>mail: {{mail}} <button type="button">Change</button></li>
                 <li>address: {{address}} <button type="button">Change</button></li>
+                {{/user}}
             </ul>
             <p><button type="button" onclick="chargePassword()">Change password</button></p>
             {{#password}}

@@ -1,4 +1,4 @@
-package es.dws.gym.gym;
+package es.dws.gym.gym.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
