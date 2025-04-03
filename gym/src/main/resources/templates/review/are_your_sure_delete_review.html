@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Review</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+        <script src="/js/deleteReviewBotoms.js"></script>
+    </head>
+    <body>
+        {{>header}}
+        <div class="panel">
+            <h2>Delete Review</h2>
+            {{#review}}
+            <ul>
+                <li>User: {{users.id}}</li>
+                <li>Date: {{date}}</li>
+                <li>Review: {{content}}</li>
+            </ul>
+            <p>Are you sure to delete the review?</p>
+            <p>
+                <button type="button" onclick="DeleteReview('{{id}}','true')">Delete review</button>
+                <button type="button" onclick="notDeleteReview()">Not Delete Review</button>
+            </p>
+            {{/review}}
+        </div>
+        {{>footer}}
+    </body>
+</html>

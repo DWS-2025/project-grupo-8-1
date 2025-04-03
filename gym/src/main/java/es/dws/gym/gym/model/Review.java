@@ -62,4 +62,8 @@ public class Review {
     public void setUser(User users){
         this.users = users;
     }
+
+    public boolean isAutorReview(User users){
+        return this.users.equals(users);
+    }
 }

@@ -5,20 +5,27 @@
         <title>Review</title>
         <link rel="stylesheet" href="/css/genericStyles.css">
         <link rel="stylesheet" href="/css/panelForm.css">
+        <script src="/js/ReviewsBotoms.js"></script>
     </head>
     <body>
         {{>header}}
         <div class="panel">
             <h2>Review</h2>
-            {{#user}}
+            {{#user_login}}
             <a href="/review/add" class="boton_black">add view</a>
-            {{/user}}
+            {{/user_login}}
             {{#reviews}}
             <ul>
-                <li>User: {{userName}}</li>
+                <li>User: {{users.id}}</li>
                 <li>Date: {{date}}</li>
                 <li>Review: {{content}}</li>
             </ul>
+            {{#user_login}}
+            <p>
+                <button type="button" onclick="edit('{{id}}')">edit</button>
+                <button type="button" onclick="del('{{id}}')">delete</button>
+            </p>
+            {{/user_login}}
             {{/reviews}}
         </div>
         {{>footer}}

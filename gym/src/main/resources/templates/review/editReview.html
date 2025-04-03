@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Add review</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        {{#Review}}
+        <form action="/review/{{id}}/edit" method="POST" class="panel">
+            <h2>Edit Review</h2>
+            <div class="panel-group">
+                <label for="contenReview">Review</label>
+                <textarea id="contenReview" name="contenReview" rows="20" cols="100" required>{{content}}</textarea>
+            </div>
+            <div class="panel-group">
+                <input type="submit" class="boton_black" value="Edit">
+            </div>
+        </form>
+        {{/Review}}        
+        {{>footer}}
+    </body>
+</html>

@@ -36,15 +36,24 @@ public class ReviewService {
     public Review getReview(Long id){
         return reviewRepository.findById(id).orElse(null);
     }
-    
+
+    public boolean isReviewExist(Long id){
+        return getReview(id) != null;
+    }
+
     public List<Review> getAllReviews(){
         return reviewRepository.findAll();
     }
 
-    public boolean setContent(Long id, String content){
+    public void editReview(Long id, String content){
         Review review = getReview(id);
         review.setContent(content);
         reviewRepository.save(review);
-        return true;
+    }
+
+    public void deleteReview(Review reviewdelete){
+        User user = reviewdelete.getUser();
+        user.getReviews().remove(reviewdelete);
+        userRepository.save(user);
     }
 }
