@@ -8,7 +8,7 @@
     </head>
     <body>
         {{>header}}
-        <form action="/register" method="POST" class="panel">
+        <form action="/register" method="POST" class="panel" enctype="multipart/form-data">
             <h2>Register</h2>
             <div class="panel-group">
                 <label for="userName">User Name</label>
@@ -41,6 +41,10 @@
             <div class="panel-group">
                 <label for="confirmPassword">confirm password</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <div class="panel-group">
+                <label for="imageUpload">Upload Image (JPG) 300x300</label>
+                <input type="file" id="imageUpload" name="imageUpload" accept="image/jpeg">
             </div>
             <div class="panel-group">
                 <input type="submit" class="boton_black" value="register">

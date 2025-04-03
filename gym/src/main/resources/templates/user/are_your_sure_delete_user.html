@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Review</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+        <script src="/js/deleteUserBotoms.js"></script>
+    </head>
+    <body>
+        {{>header}}
+        <div class="panel">
+            <h2>Delete User</h2>
+            <p>Are you sure to delete the user?</p>
+            <p>
+                <button type="button" onclick="DeleteUser()">Delete user</button>
+                <button type="button" onclick="notDeleteUser()">Not Delete user</button>
+            </p>
+        </div>
+        {{>footer}}
+    </body>
+</html>

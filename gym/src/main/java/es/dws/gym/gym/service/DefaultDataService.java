@@ -26,7 +26,7 @@ public class DefaultDataService {
 */
     @PostConstruct
     public void init(){
-        User prueba = new User("prueba", "prueba", "prueba", "+34898764322", "prueba@prueba.com", "Calle prueba", "prueba");
+        User prueba = new User("prueba", "prueba", "prueba", "+34898764322", "prueba@prueba.com", "Calle prueba", "prueba", null);
         
         try {
             java.util.Date utilDate = new SimpleDateFormat("dd/MM/yyyy").parse("21/07/2023");

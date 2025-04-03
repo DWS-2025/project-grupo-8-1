@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Bodybuild fitness</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+        <script src="/js/HomeUserBotoms.js"></script>
+    </head>
+    <body>
+        {{>header}}
+        <div class="panel">
+            <h2>Home user</h2>
+            <h3>user information</h3>
+            <ul>
+                {{#user}}
+                <li>User Name: {{userName}}</li>
+                <li>First Name: {{firstName}}</li>
+                <li>Sure Name: {{sureName}}</li>
+                <li>telephone: {{telephone}}</li>
+                <li>mail: {{mail}}</li>
+                <li>address: {{address}}</li>
+                {{/user}}
+            </ul>
+            {{#user}}
+            <img src="/user/{{id}}/image">
+            {{/user}}
+            <p>
+                <button type="button" onclick="editUser()">Edit user</button>
+                <button type="button" onclick="chargePassword()">Change password</button>
+                <button type="button" onclick="deleteUser()">Delete user</button>
+            </p>
+            <p><button type="button" onclick="logout()">Logout</button></p>
+        </div>
+        {{>footer}}
+    </body>
+</html>

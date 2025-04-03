@@ -1,5 +1,6 @@
 package es.dws.gym.gym.model;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
@@ -46,10 +48,13 @@ import jakarta.persistence.OneToMany;
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Gimclass> gimclass;
 
+    @Lob
+    private Blob imageUser;
+
     public User(){}
 
     // Constructor to initialize a User object.
-    public User(String id, String firstName, String sureName, String telephone, String mail, String address, String password) {
+    public User(String id, String firstName, String sureName, String telephone, String mail, String address, String password, Blob imageUser) {
         this.id = id;
         this.firstName = firstName;
         this.sureName = sureName;
@@ -59,6 +64,7 @@ import jakarta.persistence.OneToMany;
         this.password = password;
         this.reviews = new ArrayList<Review>();
         this.gimclass = new ArrayList<Gimclass>();
+        this.imageUser = imageUser;
     }
 
 
@@ -104,6 +110,10 @@ import jakarta.persistence.OneToMany;
         return gimclass;
     }
 
+    public Blob getImageUser() {
+        return imageUser;
+    }
+
     //Updates the user's first name.
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -144,6 +154,10 @@ import jakarta.persistence.OneToMany;
 
     public void setGimClass(List<Gimclass> gimclasses){
         this.gimclass = gimclasses;
+    }
+
+    public void setImageUser(Blob imageUser) {
+        this.imageUser = imageUser;
     }
 
 }
