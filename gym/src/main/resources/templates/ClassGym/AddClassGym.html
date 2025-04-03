@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Add Class</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        <form action="/gymclass/add" method="POST" class="panel">
+            <h2>Gym Class</h2>
+            <div class="panel-group">
+                <label for="name">Class Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="panel-group">
+                <label for="descrip">Description</label>
+                <textarea id="descript" name="descript" rows="10" cols="100" required></textarea>
+            </div>
+            <div class="panel-group">
+                <label for="time">Scheduled Date &amp; Time</label>
+                <input type="datetime-local" id="time" name="time" required>
+            </div>
+            <div class="panel-group">
+                <label for="duration">Duration</label>
+                <input type="time" id="duration" name="duration" required>
+            </div>
+            <div class="panel-group">
+                <input type="submit" class="boton_black" value="Create">
+            </div>
+        </form>        
+        {{>footer}}
+    </body>
+</html>

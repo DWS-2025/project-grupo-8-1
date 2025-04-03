@@ -2,6 +2,7 @@ package es.dws.gym.gym.model;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -21,10 +22,10 @@ public class Gimclass {
     private String name;
 
     // Description of the class
-    private String descrip;
+    private String descript;
 
     @ManyToMany
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     // Date and time when the class is scheduled
     private Date time;
@@ -37,9 +38,13 @@ public class Gimclass {
     //Constructor to initialize a gym class.
     public Gimclass(String name, String descript, Date time, Time duration) {
         this.name = name;
-        this.descrip = descript;
+        this.descript = descript;
         this.time = time;
         this.duration = duration;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     // Retrieves the name of the class.
@@ -49,7 +54,7 @@ public class Gimclass {
 
     // Retrieves the description of the class.
     public String getDescrip() {
-        return descrip;
+        return descript;
     }
 
     //Retrieves the duration of the class.
@@ -64,5 +69,25 @@ public class Gimclass {
 
     public List<User> getUsers(){
         return users;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setDescript(String descript) {
+        this.descript = descript;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public void setDuration(Time duration) {
+        this.duration = duration;
     }
 }

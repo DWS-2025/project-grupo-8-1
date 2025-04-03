@@ -19,9 +19,9 @@ public class GymMainControl {
     public String index(@CookieValue(value = "login", defaultValue = "") String login, Model model){
 
         if(login.isEmpty()){
-            model.addAttribute("user", false);
+            model.addAttribute("user_login", false);
         }else{
-            model.addAttribute("user", true);
+            model.addAttribute("user_login", true);
             model.addAttribute("userName", login);
         }
 

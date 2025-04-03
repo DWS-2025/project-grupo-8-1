@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Delete Class</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+        <script src="/js/deleteClassBotoms.js"></script>
+    </head>
+    <body>
+        {{>header}}
+        <div class="panel">
+            <h2>Delete Class</h2>
+            {{#GymClass}}
+            <ul>
+                <li>Name: {{name}}</li>
+                <li>Description: {{descript}}</li>
+                <li>Init: {{time}}</li>
+                <li>Length: {{duration}}</li>
+                <li>Users : 
+                    {{^each users}}
+                    None
+                    {{/each users}}
+                    {{#each users}}
+                    {{name}},
+                    {{/each users}}
+                </li>
+            </ul>
+            <p>Are you sure to delete the class?</p>
+            <p>
+                <button type="button" onclick="DeleteReview('{{id}}','true')">Delete review</button>
+                <button type="button" onclick="notDeleteReview()">Not Delete Review</button>
+            </p>
+            {{/GymClass}}
+        </div>
+        {{>footer}}
+    </body>
+</html>
