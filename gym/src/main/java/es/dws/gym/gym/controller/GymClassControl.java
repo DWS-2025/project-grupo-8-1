@@ -48,13 +48,34 @@ public class GymClassControl {
     
     // This method handles POST requests for adding a new gym class. It processes the submitted class details and adds the class using the GymClassService.
     @PostMapping("/gymclass/add")
-    public String GymClassAdd(@CookieValue(value = "login", defaultValue = "") String login, @RequestParam String name, @RequestParam String descript, @RequestParam String time, @RequestParam String duration, Model model) {
+    public String GymClassAdd(@CookieValue(value = "login", defaultValue = "") String login, 
+                              @RequestParam String name, 
+                              @RequestParam String descript, 
+                              @RequestParam String time, 
+                              @RequestParam String duration, 
+                              Model model) {
         if (login.isEmpty()) {
             model.addAttribute("error", "Error: You must be logged in to add a class.");
             model.addAttribute("error_redirect", "/gymclass");
             return "error";
         }
-        gimClassService.addClass(name, descript, time, duration);
+
+        // Validar parámetros
+        if (name == null || name.isEmpty() || descript == null || descript.isEmpty() || 
+            time == null || time.isEmpty() || duration == null || duration.isEmpty()) {
+            model.addAttribute("error", "Error: All fields are required.");
+            model.addAttribute("error_redirect", "/gymclass/add");
+            return "error";
+        }
+
+        try {
+            gimClassService.addClass(name, descript, time, duration);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", "Error: Invalid time or duration format.");
+            model.addAttribute("error_redirect", "/gymclass/add");
+            return "error";
+        }
+
         return "redirect:/gymclass";
     }
     
