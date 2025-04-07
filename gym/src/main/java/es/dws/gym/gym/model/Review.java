@@ -32,6 +32,10 @@ public class Review {
         this.date = date;
     }
 
+    // Retrieves the ID of the review.
+    public Long getId() {
+        return id;
+    }
 
     // Retrieves the content of the review.
     public String getContent() {
