@@ -21,6 +21,7 @@ import java.io.IOException;
 import es.dws.gym.gym.model.User;
 import es.dws.gym.gym.service.ImageService;
 import es.dws.gym.gym.service.UserService;
+import es.dws.gym.gym.dto.UserDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -82,7 +83,8 @@ public class UserWebControl {
             return "error";
         }
         
-        userService.addUser(userName, firstname, secondName, telephone, mail, address, password, imageFile);
+        UserDTO newUser = new UserDTO(userName, firstname, secondName, telephone, mail, address, password, null);
+        userService.addUser(newUser.id(), newUser.firstName(), newUser.sureName(), newUser.telephone(), newUser.mail(), newUser.address(), newUser.password(), imageFile);
         return "redirect:/login";
     }
 
