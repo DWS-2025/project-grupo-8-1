@@ -44,9 +44,8 @@ Se han implementado API REST para permitir la interacción entre el frontend y e
     - Visualización de todas las reseñas.
 
 ## Próximos Pasos
-- Implementar soporte para imágenes en las clases de gimnasio.
-- Mejorar la interfaz de usuario para una experiencia más intuitiva.
-- Añadir roles adicionales para una gestión más granular de permisos.
+- Realizar paginación mediante AJAX de una de las entidades
+- Realizar una consulta dinámica sobre una de las entidades
 
 ## Funcionalidades No Implementadas
 - **Memberships**: Aunque estaba planeado incluir un sistema de membresías para gestionar los planes de suscripción de los usuarios, esta funcionalidad no se ha implementado. Sin embargo, he acordado con mi profesor que, dado que soy el único desarrollador del proyecto, no era necesario incluir esta característica.
