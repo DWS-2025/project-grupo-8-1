@@ -11,10 +11,12 @@ import jakarta.persistence.ManyToOne;
 // Represents a user review with details such as username, content, and date of review.
 public class Review {
     
+    // Unique identifier for the review
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    // The user who posted the review
     @ManyToOne
     private User users;
 
@@ -59,14 +61,17 @@ public class Review {
         this.date = date;
     }
 
+    // Sets the user who posted the review.
     public User getUser(){
         return users;
     }
 
+    // Retrieves the user who posted the review.
     public void setUser(User users){
         this.users = users;
     }
 
+    // Checks if the review was posted by a specific user.
     public boolean isAutorReview(User users){
         return this.users.equals(users);
     }

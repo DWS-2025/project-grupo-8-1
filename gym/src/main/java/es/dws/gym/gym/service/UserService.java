@@ -15,12 +15,21 @@ import es.dws.gym.gym.dto.ViewUserDTO;
 import es.dws.gym.gym.model.User;
 import es.dws.gym.gym.repository.UserRepository;
 
+/* 
+ * UserService.java
+ * 
+ * This service class handles user-related operations such as creating, updating,
+ * deleting, and retrieving user information. It interacts with the UserRepository
+ * to perform CRUD operations on the User entity.
+ */
+
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
 
+    // This method retrieves all users from the database and converts them to ViewUserDTO objects.
     public List<ViewUserDTO> getAllViewUsersDTO(){
         return userRepository.findAll().stream()
             .map(user -> new ViewUserDTO(
@@ -35,7 +44,7 @@ public class UserService {
             .collect(Collectors.toList());
     }
 
-
+    // This method retrieves a user by ID and converts it to a ViewUserDTO object.
     public ViewUserDTO getViewUserAsDTO(String id){
         User user = getUser(id);
         return user == null ? null : new ViewUserDTO(
@@ -49,6 +58,7 @@ public class UserService {
         );
     }
 
+    // This method creates a new user based on the provided CreateUserDTO object.
     public CreateUserDTO createUser(CreateUserDTO newUser) {
         if (isUser(newUser.id())) {
             return null;
@@ -70,6 +80,7 @@ public class UserService {
         }
     }
 
+    // This method updates an existing user based on the provided UpdateUserDTO object.
     public UpdateUserDTO updateUser(String id, UpdateUserDTO updatedUser) {
         if (!isUser(id)) {
             return null;
@@ -91,6 +102,7 @@ public class UserService {
         }
     }
 
+    // This method deletes a user by ID. It returns true if the user was deleted successfully, false otherwise.
     public boolean deleteUser(String id) {
         User user = getUser(id);
         if (user == null) {
@@ -100,6 +112,7 @@ public class UserService {
         return true;
     }
 
+    // This method deletes a user by ID and returns the deleted user's information as a ViewUserDTO object.
     public ViewUserDTO deleteUserAndReturnDTO(String id) {
         User user = getUser(id);
         if (user == null) {
@@ -110,6 +123,7 @@ public class UserService {
         return userDTO;
     }
 
+    // This method converts a User object to an UpdateUserDTO object.
     private UpdateUserDTO convertToUpdateDTO(User user) {
         return new UpdateUserDTO(
                 user.getFirstName(),
@@ -120,6 +134,7 @@ public class UserService {
         );
     }
 
+    // This method adds a new user to the database. It returns true if the user was added successfully, false otherwise.
     public boolean addUser(String id, String firstName, String sureName, String telephone, String mail, String address, String password, MultipartFile imageUpload) throws IOException {
         if (isUser(id)) {
             return false;
@@ -135,14 +150,17 @@ public class UserService {
         return true;
     }
 
+    // This method checks if a user exists in the database by ID.
     public boolean isUser(String id) {
         return userRepository.existsById(id);
     }
 
+    // This method retrieves a user by ID from the database.
     public User getUser(String id) {
         return userRepository.findById(id).orElse(null);
     }
 
+    // This method retrieves a user by ID and converts it to a User object.
     public void editUser(String id, String firstName, String sureName, String telephone, String mail, String address, MultipartFile imageUpload) throws IOException {
         User user = getUser(id);
         user.setFirstName(firstName);
@@ -157,14 +175,17 @@ public class UserService {
         userRepository.save(user);
     }
 
+    // This method retrieves a user by ID and converts it to a User object.
     public void removeUser(User user) {
         userRepository.delete(user);
     }
 
+    // This method retrieves all users from the database.
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    // This method retrieves a user by ID and converts it to a User object.
     public boolean setPassword(String id, String newPassword) {
         User user = getUser(id);
         if (user == null) {

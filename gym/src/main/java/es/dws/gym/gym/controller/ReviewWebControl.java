@@ -63,6 +63,7 @@ public class ReviewWebControl {
         return "redirect:/review";
     }
 
+    //This method handles GET requests for the "/review/{id}/edit" page.It checks if the user is logged in and if the review exists before allowing editing.
     @GetMapping("/review/{id}/edit")
     public String editPageReview(@PathVariable Long id,@CookieValue(value = "login", defaultValue = "") String login, Model model) {
         if(login.isEmpty()){

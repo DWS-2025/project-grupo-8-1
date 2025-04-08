@@ -10,6 +10,14 @@ import java.net.URI;
 import java.util.List;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
+/**
+ * ReviewRestControl.java
+ *
+ * This class is a REST controller that handles HTTP requests related to reviews.
+ * It provides endpoints for listing, retrieving, creating, updating, and deleting reviews.
+ * The controller uses the ReviewService to perform the actual operations on the data.
+ */
+
 @RestController
 @RequestMapping("/api/review")
 public class ReviewRestControl {
@@ -17,18 +25,21 @@ public class ReviewRestControl {
     @Autowired
     private ReviewService reviewService;
 
+    // This endpoint retrieves a list of all reviews.
     @GetMapping
     public ResponseEntity<List<ReviewDTO>> listReviews() {
         List<ReviewDTO> reviews = reviewService.getAllReviewsAsDTO();
         return ResponseEntity.ok(reviews);
     }
 
+    // This endpoint retrieves a specific review by its ID.
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> getReview(@PathVariable Long id) {
         ReviewDTO review = reviewService.getReviewAsDTO(id);
         return review == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(review);
     }
 
+    // This endpoint creates a new review and returns it as a DTO.
     @PostMapping
     public ResponseEntity<ReviewDTO> createReview(@RequestBody CreateReviewDTO reviewDto) {
         ReviewDTO createdReview = reviewService.createReview(reviewDto);
@@ -39,12 +50,14 @@ public class ReviewRestControl {
         return ResponseEntity.created(location).body(createdReview);
     }
 
+    // This endpoint updates an existing review and returns it as a DTO.
     @PutMapping
     public ResponseEntity<ReviewDTO> updateReview(@RequestBody ReviewDTO updateDto) {
         ReviewDTO updatedReview = reviewService.updateReview(updateDto.id(), updateDto);
         return updatedReview == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(updatedReview);
     }
 
+    // This endpoint deletes a review by its ID and returns the deleted review as a DTO.
     @DeleteMapping("/{id}")
     public ResponseEntity<ReviewDTO> deleteReview(@PathVariable Long id) {
         ReviewDTO deletedReview = reviewService.deleteReviewAndReturnDTO(id);

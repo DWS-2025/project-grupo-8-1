@@ -12,18 +12,19 @@ import es.dws.gym.gym.model.User;
 import es.dws.gym.gym.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 
+/**
+ * DefaultDataService.java
+ *
+ * This service class is responsible for initializing default data in the database.
+ * It creates a test user and associated reviews when the application starts.
+ */
+
 @Service
 public class DefaultDataService {
     
     @Autowired
     private UserRepository userRepository;
-/* 
-    @Autowired
-    private ReviewRepository reviewRepository;
 
-    @Autowired
-    private GimclassService gimclassService;
-*/
     @PostConstruct
     public void init(){
         User prueba = new User("prueba", "prueba", "prueba", "+34898764322", "prueba@prueba.com", "Calle prueba", "prueba", null);

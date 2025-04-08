@@ -67,7 +67,7 @@ import jakarta.persistence.OneToMany;
         this.imageUser = imageUser;
     }
 
-
+    //Retrieves the user's ID.
     public String getId() {
         return id;
     }
@@ -102,14 +102,17 @@ import jakarta.persistence.OneToMany;
         return password;
     }
 
+    //Retrieves the user's reviews.
     public List<Review> getReviews(){
         return reviews;
     }
 
+    //Retrieves the user's gym classes.
     public List<Gimclass> getGimClass(){
         return gimclass;
     }
 
+    //Retrieves the user's image.
     public Blob getImageUser() {
         return imageUser;
     }
@@ -148,14 +151,17 @@ import jakarta.persistence.OneToMany;
         this.address = address;
     }
 
+    // Updates the user's reviews.
     public void setReviews(List<Review> reviews){
         this.reviews = reviews;
     }
 
+    // Updates the user's gym classes.
     public void setGimClass(List<Gimclass> gimclasses){
         this.gimclass = gimclasses;
     }
 
+    // Updates the user's image.
     public void setImageUser(Blob imageUser) {
         this.imageUser = imageUser;
     }

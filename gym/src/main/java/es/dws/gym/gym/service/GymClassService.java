@@ -13,6 +13,15 @@ import es.dws.gym.gym.model.Gimclass;
 import es.dws.gym.gym.model.User;
 import es.dws.gym.gym.repository.GimclassRepository;
 
+/**
+ * GymClassService.java
+ *
+ * This service class handles gym class-related operations such as creating, updating,
+ * deleting, and retrieving gym classes. It interacts with the GimclassRepository to perform
+ * CRUD operations on the Gimclass entity.
+ */
+
+
 @Service
 public class GymClassService {
 
@@ -22,17 +31,20 @@ public class GymClassService {
     @Autowired
     private UserService userService;
 
+    // This method retrieves all gym classes from the database and converts them to GymClassDTO objects.
     public List<GymClassDTO> getAllGymClassesAsDTO() {
         return gimclassRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
+    // This method retrieves a gym class by ID and converts it to a GymClassDTO object.
     public GymClassDTO getGymClassAsDTO(Long id) {
         Gimclass gymClass = getGimClass(id);
         return gymClass == null ? null : convertToDTO(gymClass);
     }
 
+    // This method creates a new gym class and saves it to the database.
     public GymClassDTO createGymClass(CreateGymClassDTO createGymClassDTO) {
         Gimclass gymClass = new Gimclass(
                 createGymClassDTO.name(),
@@ -54,6 +66,7 @@ public class GymClassService {
         return convertToDTO(gymClass);
     }
 
+    // This method updates an existing gym class based on the provided GymClassDTO object.
     public GymClassDTO updateGymClass(Long id, GymClassDTO gymClassDTO) {
         Gimclass gymClass = gimclassRepository.findById(id).orElse(null);
         if (gymClass == null) {
@@ -67,6 +80,7 @@ public class GymClassService {
         return convertToDTO(gymClass);
     }
 
+    // This method deletes a gym class by ID and returns the deleted gym class as a GymClassDTO object.
     public GymClassDTO deleteGymClassAndReturnDTO(Long id) {
         Gimclass gymClass = gimclassRepository.findById(id).orElse(null);
         if (gymClass == null) {
@@ -77,6 +91,7 @@ public class GymClassService {
         return gymClassDTO;
     }
 
+    // This method converts a Gimclass object to a GymClassDTO object.
     private GymClassDTO convertToDTO(Gimclass gymClass) {
         List<String> userIds = gymClass.getUsers().stream()
                 .map(User::getId)
@@ -91,19 +106,23 @@ public class GymClassService {
         );
     }
 
+    // This method checks if a gym class with the given ID exists in the database.
     public void addClass(String name, String descript, String time, String duration) {
         Gimclass gimclass = new Gimclass(name, descript, formatSQLDate(time), formatSQLTime(duration));
         gimclassRepository.save(gimclass);
     }
 
+    // This method retrieves a gym class by ID.
     public Gimclass getGimClass(Long id) {
         return gimclassRepository.findById(id).orElse(null);
     }
 
+    // This method retrieves all gym classes from the database.
     public List<Gimclass> getListGymClass() {
         return gimclassRepository.findAll();
     }
 
+    // This method checks if a gym class with the given ID exists in the database.
     public void updateClass(Long id, String name, String descript, String time, String duration) {
         Gimclass gimclass = gimclassRepository.findById(id).orElse(null);
         if (gimclass != null) {
@@ -115,11 +134,13 @@ public class GymClassService {
         }
     }
 
+    // This method deletes a gym class by ID.
     public void deleteClass(Long id) {
         Gimclass gimclass = gimclassRepository.findById(id).orElse(null);
         gimclassRepository.delete(gimclass);
     }
 
+    // This method toggles a user's enrollment in a gym class.
     public void toggleUserInClass(Long classId, String userId) {
         Gimclass gimclass = gimclassRepository.findById(classId).orElse(null);
         User user = userService.getUser(userId);
@@ -133,6 +154,7 @@ public class GymClassService {
         }
     }
 
+    // This method checks if a user is already enrolled in a gym class.
     private Date formatSQLDate(String date) {
         try {
             return Date.valueOf(date);
@@ -141,6 +163,7 @@ public class GymClassService {
         }
     }
 
+    // This method checks if a user is already enrolled in a gym class.
     private Time formatSQLTime(String time) {
         try {
             return Time.valueOf(time);
