@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: sprint_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: "GYM"
+      MYSQL_USER: "gym"
+      MYSQL_PASSWORD: "sprintGym"
+      MYSQL_ROOT_PASSWORD: "sprintAdminGym"
+    ports:
+      - '3306:3306'
