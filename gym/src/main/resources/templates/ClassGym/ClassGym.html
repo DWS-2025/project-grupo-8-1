@@ -11,6 +11,15 @@
         {{>header}}
         <div class="panel">
             <h2>GymClass</h2>
+            <div class="search-panel">
+                <form action="/gymclass/search" method="get">
+                    <input type="text" name="name" placeholder="Search by name">
+                    <label>
+                        <input type="checkbox" name="myClasses"> My Classes
+                    </label>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
             {{#user_login}}
             <a href="/gymclass/add" class="boton_black">add class</a>
             {{/user_login}}
@@ -21,12 +30,8 @@
                 <li>Init: {{time}}</li>
                 <li>Length: {{duration}}</li> 
                 <li>Users :
-                    {{^users}}
-                    None
-                    {{/users}}
-                    {{#users}}
-                        {{id}} 
-                    {{/users}}
+                    {{^users}} None {{/users}}
+                    {{#users}} {{id}} {{/users}}
                 </li>
             </ul>
             {{#user_login}}

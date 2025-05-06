@@ -167,4 +167,28 @@ public class GymClassControl {
         gimClassService.toggleUserInClass(id, login);
         return "redirect:/gymclass";
     }
+
+    // This method handles GET requests for searching gym classes dynamically.
+    @GetMapping("/gymclass/search")
+    public String searchGymClasses(@CookieValue(value = "login", defaultValue = "") String login,
+                                    @RequestParam(required = false) String name,
+                                    @RequestParam(required = false) boolean myClasses,
+                                    Model model) {
+        if (login.isEmpty()) {
+            model.addAttribute("user_login", false);
+            return "redirect:/gymclass";
+        }
+        model.addAttribute("user_login", true);
+        model.addAttribute("userName", login);
+
+        if (myClasses) {
+            model.addAttribute("GymClass", gimClassService.getGymClassesByUser(login));
+        } else if (name != null && !name.isEmpty()) {
+            model.addAttribute("GymClass", gimClassService.searchGymClassesByName(name));
+        } else {
+            model.addAttribute("GymClass", gimClassService.getListGymClass());
+        }
+
+        return "ClassGym/ClassGym";
+    }
 }
