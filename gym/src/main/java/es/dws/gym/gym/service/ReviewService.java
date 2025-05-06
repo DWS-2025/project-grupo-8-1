@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import es.dws.gym.gym.dto.CreateReviewDTO;
 import es.dws.gym.gym.dto.ReviewDTO;
@@ -23,7 +25,7 @@ import es.dws.gym.gym.repository.UserRepository;
 
 
 @Service
-public class ReviewService {
+public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -33,6 +35,22 @@ public class ReviewService {
 
     @Autowired
     private UserRepository userRepository;
+
+    // This method converts a Review entity to a ReviewDTO object.
+    @Override
+    public ReviewDTO toDTO(Review review) {
+        return new ReviewDTO(
+            review.getId(),
+            review.getUser().getId().toString(),
+            review.getContent(),
+            review.getLocalDateTime().toString()
+        );
+    }
+
+    // This method converts a Review entity to a ReviewDTO object.
+    private ReviewDTO convertToDTO(Review review) {
+        return toDTO(review);
+    }
 
     // This method retrieves all reviews from the database and converts them to ReviewDTO objects.
     public List<ReviewDTO> getAllReviewsAsDTO() {
@@ -84,16 +102,6 @@ public class ReviewService {
         return reviewDTO;
     }
 
-    // This method converts a Review object to a ReviewDTO object.
-    private ReviewDTO convertToDTO(Review review) {
-        return new ReviewDTO(
-                review.getId(),
-                review.getUser().getId(),
-                review.getContent(),
-                review.getLocalDateTime().toString()
-        );
-    }
-
     // This method adds a review to a user and saves it to the database.
     public void addReview(String userName, String content) {
         java.util.Date utilDate = new java.util.Date();
@@ -132,5 +140,11 @@ public class ReviewService {
         User user = review.getUser();
         user.getReviews().remove(review);
         userRepository.save(user);
+    }
+
+    // This method retrieves paginated reviews and converts them to ReviewDTO objects.
+    public Page<ReviewDTO> getReviewsPaginated(int page, int size) {
+        return reviewRepository.findAll(PageRequest.of(page, size))
+                .map(this::convertToDTO);
     }
 }

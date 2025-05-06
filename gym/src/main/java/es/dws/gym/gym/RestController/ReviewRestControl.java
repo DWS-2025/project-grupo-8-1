@@ -6,8 +6,10 @@ import es.dws.gym.gym.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 /**
@@ -25,11 +27,21 @@ public class ReviewRestControl {
     @Autowired
     private ReviewService reviewService;
 
-    // This endpoint retrieves a list of all reviews.
+    // This endpoint retrieves all reviews and returns them as a list of ReviewDTO objects.
     @GetMapping
     public ResponseEntity<List<ReviewDTO>> listReviews() {
         List<ReviewDTO> reviews = reviewService.getAllReviewsAsDTO();
         return ResponseEntity.ok(reviews);
+    }
+
+    // This endpoint retrieves reviews in a paginated format.
+    @GetMapping("/paginated")
+    public ResponseEntity<?> listReviewsPaginated(@RequestParam int page, @RequestParam int size) {
+        Page<ReviewDTO> reviewsPage = reviewService.getReviewsPaginated(page - 1, size);
+        return ResponseEntity.ok(Map.of(
+            "reviews", reviewsPage.getContent(),
+            "hasMore", reviewsPage.hasNext()
+        ));
     }
 
     // This endpoint retrieves a specific review by its ID.

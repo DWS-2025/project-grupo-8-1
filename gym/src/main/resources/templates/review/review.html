@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="/css/genericStyles.css">
         <link rel="stylesheet" href="/css/panelForm.css">
         <script src="/js/ReviewsBotoms.js"></script>
+        <script src="/js/AjaxReview.js"></script>
     </head>
     <body>
         {{>header}}
@@ -14,19 +15,13 @@
             {{#user_login}}
             <a href="/review/add" class="boton_black">add view</a>
             {{/user_login}}
-            {{#reviews}}
-            <ul>
-                <li>User: {{users.id}}</li>
-                <li>Date: {{date}}</li>
-                <li>Review: {{content}}</li>
-            </ul>
-            {{#user_login}}
-            <p>
-                <button type="button" onclick="edit('{{id}}')">edit</button>
-                <button type="button" onclick="del('{{id}}')">delete</button>
-            </p>
-            {{/user_login}}
-            {{/reviews}}
+            <div id="reviews-container">
+                <!-- Reviews will be loaded here dynamically -->
+            </div>
+            <div id="pagination-controls">
+                <button id="prev-page" onclick="loadReviews(currentPage - 1)" disabled>Anterior</button>
+                <button id="next-page" onclick="loadReviews(currentPage + 1)">Siguiente</button>
+            </div>
         </div>
         {{>footer}}
     </body>
