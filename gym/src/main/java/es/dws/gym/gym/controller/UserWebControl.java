@@ -22,9 +22,10 @@ import es.dws.gym.gym.model.User;
 import es.dws.gym.gym.service.ImageService;
 import es.dws.gym.gym.service.UserService;
 import es.dws.gym.gym.dto.UserDTO;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * This class serves as the controller for handling user-related operations
@@ -43,22 +44,21 @@ public class UserWebControl {
 
     //Handles GET requests to the login page. If the user is already logged in,they are redirected to the homepage.
     @GetMapping("/login")
-    public String login(@CookieValue(value = "login", defaultValue = "") String login, Model model) {
-        if(!login.isEmpty()){
-            return "redirect:/";
-        }
-        model.addAttribute("user_login", false);
+    public String login() {
         return "user/login";
     }
 
-
+    //Handles POST requests to authenticate the user. If the authentication fails,an error message is displayed.
+    @GetMapping("/login/error")
+    public String loginError(Model model) {
+        model.addAttribute("error", "The user or password not found");
+        model.addAttribute("error_redirect", "/login");
+        return "error";  // Return error if username is already taken
+    }
+    
     //Handles GET requests to the registration page. If the user is already logged in,they are redirected to the homepage.
     @GetMapping("/register")
-    public String register(@CookieValue(value = "login", defaultValue = "") String login, Model model) {
-        if(!login.isEmpty()){
-            return "redirect:/";
-        }
-        model.addAttribute("user_login", false);
+    public String register(Model model) {
         return "user/register";
     }
 
@@ -83,84 +83,50 @@ public class UserWebControl {
             return "error";
         }
         
-        UserDTO newUser = new UserDTO(userName, firstname, secondName, telephone, mail, address, password, null);
-        userService.addUser(newUser.id(), newUser.firstName(), newUser.sureName(), newUser.telephone(), newUser.mail(), newUser.address(), newUser.password(), imageFile);
+        UserDTO newUser = new UserDTO(userName, firstname, secondName, telephone, mail, address, password, null, "USER");
+        userService.addUser(newUser.id(), newUser.firstName(), newUser.sureName(), newUser.telephone(), newUser.mail(), newUser.address(), newUser.password(), imageFile, newUser.rol());
         return "redirect:/login";
-    }
-
-
-    // Handles POST requests to log in a user. It checks if the provided username and password are valid and sets a login cookie if successful.
-    @PostMapping("/login")
-    public String loadLogin(@RequestParam String userName, @RequestParam String password, Model model, HttpServletResponse response) {
-        User user = userService.getUser(userName);
-        if(user == null || !user.getPassword().equals(password)){
-            model.addAttribute("error", "the user or password is not correct");
-            model.addAttribute("error_redirect", "/login");
-            return "error";
-        }
-        Cookie cookieUser = new Cookie("login", userName);
-        response.addCookie(cookieUser);
-        return "redirect:/";
     }
 
     //Handles GET requests to the home page for a logged-in user. It checks if the user is logged in and displays the user's data, such as name, email, and phone number.
     @GetMapping("/home")
-    public String homeUser(@CookieValue(value = "login", defaultValue = "") String login, Model model) {
-        if(login.isEmpty()){
-            return "redirect:/login";
-        }
-        model.addAttribute("user_login", true);
-        model.addAttribute("userName", login);
-        model.addAttribute("user", userService.getUser(login));
-        return "user/homeUser";  // Return the homepage view for the user
+    public String homeUser(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        
+        model.addAttribute("user", userService.getUser(userId));
+        return "user/homeUser";
     }
 
-
-    // Handles GET requests for logging out a user. It deletes the login cookie and redirects to the homepage.
-    @GetMapping("/logout")
-    public String logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("login", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-        return "redirect:/";  // Redirect to the homepage after logging out
-    }
-
-
-    //Handles GET requests to the password change page. If the user is not logged in,they will be redirected to the login page.
+    //Handles GET requests to the password change page.
     @GetMapping("/user/newpassword")
-    public String newpassword(@CookieValue(value = "login", defaultValue = "") String login) {
-        if(login.isEmpty()){
-            return "redirect:/login";
-        }
+    public String newpassword() {
         return "user/newpassword";
     }
 
     //Handles POST requests to change the user's password. It checks if the password and confirmation match before updating the password in the system.
     @PostMapping("/user/newpassword")
-    public String changePassword(@CookieValue(value = "login", defaultValue = "") String login ,@RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, Model model) {
-        if(login.isEmpty()){
-            return "redirect:/login";
-        }
+    public String changePassword(@RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
 
-        if(!password.equals(confirmPassword)){
+        if (!password.equals(confirmPassword)) {
             model.addAttribute("error", "WARNING: passwords do not match");
             model.addAttribute("error_redirect", "/newpassword");
             return "error";
         }
-        
-        userService.setPassword(login, password);
+
+        userService.setPassword(userId, password);
         return "redirect:/home";
     }
     
-    //Handles GET requests to the user edit page. If the user is not logged in,they will be redirected to the login page.
+    //Handles GET requests to the user edit page.
     @GetMapping("/user/edit")
-    public String editUser(@CookieValue(value = "login", defaultValue = "") String login, Model model) {
-        if(login.isEmpty()){
-            return "redirect:/";
-        }
-        User user = userService.getUser(login);
-        model.addAttribute("user_login", true);
-        model.addAttribute("userName", login);
+    public String editUser(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        
+        User user = userService.getUser(userId);
         model.addAttribute("User", user);
         return "user/editUser";
     }
@@ -175,31 +141,28 @@ public class UserWebControl {
         return "redirect:/home";
     }
 
-    //Handles GET requests to the user delete confirmation page. If the user is not logged in,they will be redirected to the login page.
+    //Handles GET requests to the user delete confirmation page.
     @GetMapping("/user/delete")
-    public String questionDeleteUser(@CookieValue(value = "login", defaultValue = "") String login, Model model) {
-        if(login.isEmpty()){
-            return "redirect:/login";
-        }
-        model.addAttribute("user_login", true);
-        model.addAttribute("userName", login);
+    public String questionDeleteUser(Model model) {
         return "user/are_your_sure_delete_user";
     }
 
-    //Handles GET requests to delete the user. If the user is not logged in,they will be redirected to the login page.
+    //Handles GET requests to delete the user.
     @GetMapping("/user/delete/true")
-    public String deleteUser(@CookieValue(value = "login", defaultValue = "") String login) {
-        User user = userService.getUser(login);
+    public String deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername(); // Cambiado a userId
+
+        User user = userService.getUser(userId);
         userService.removeUser(user);
         return "redirect:/logout";
     }
-    //Handles GET requests to delete the user without confirmation. If the user is not logged in,they will be redirected to the login page.
+    //Handles GET requests to delete the user without confirmation.
     @GetMapping("/user/{id}/image")
     public ResponseEntity<Object> downloadUserImage(@PathVariable String id) throws SQLException, IOException {
         User user = userService.getUser(id);
         if (user != null && user.getImageUser() != null) {
             byte[] imageBytes = user.getImageUser().getBytes(1, (int) user.getImageUser().length());
-            // Siempre se devolverá como JPG
             String contentType = "image/jpeg";
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, contentType)

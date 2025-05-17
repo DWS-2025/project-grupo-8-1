@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // This method retrieves all users from the database and converts them to ViewUserDTO objects.
     public List<ViewUserDTO> getAllViewUsersDTO(){
@@ -72,7 +76,8 @@ public class UserService {
                     newUser.mail(),
                     newUser.address(),
                     newUser.password(),
-                    null
+                    null,
+                    "USER"
             );
             return newUser;
         } catch (IOException e) {
@@ -135,7 +140,7 @@ public class UserService {
     }
 
     // This method adds a new user to the database. It returns true if the user was added successfully, false otherwise.
-    public boolean addUser(String id, String firstName, String sureName, String telephone, String mail, String address, String password, MultipartFile imageUpload) throws IOException {
+    public boolean addUser(String id, String firstName, String sureName, String telephone, String mail, String address, String password, MultipartFile imageUpload, String rol) throws IOException {
         if (isUser(id)) {
             return false;
         }
@@ -145,7 +150,7 @@ public class UserService {
             imageUser = BlobProxy.generateProxy(imageUpload.getInputStream(), imageUpload.getSize());
         }
 
-        User user = new User(id, firstName, sureName, telephone, mail, address, password, imageUser);
+        User user = new User(id, firstName, sureName, telephone, mail, address, passwordEncoder.encode(password), imageUser,rol);
         userRepository.save(user);
         return true;
     }
@@ -191,7 +196,7 @@ public class UserService {
         if (user == null) {
             return false;
         }
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return true;
     }

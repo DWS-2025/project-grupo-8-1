@@ -42,19 +42,25 @@ import jakarta.persistence.OneToMany;
     // User's password
     private String password;
     
+    // User's reviews
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
+    // User's gym classes
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Gimclass> gimclass;
 
+    // User's profile image
     @Lob
     private Blob imageUser;
+
+    // User's role
+    private String rol;
 
     public User(){}
 
     // Constructor to initialize a User object.
-    public User(String id, String firstName, String sureName, String telephone, String mail, String address, String password, Blob imageUser) {
+    public User(String id, String firstName, String sureName, String telephone, String mail, String address, String password, Blob imageUser, String rol) {
         this.id = id;
         this.firstName = firstName;
         this.sureName = sureName;
@@ -65,6 +71,7 @@ import jakarta.persistence.OneToMany;
         this.reviews = new ArrayList<Review>();
         this.gimclass = new ArrayList<Gimclass>();
         this.imageUser = imageUser;
+        this.rol = rol;
     }
 
     //Retrieves the user's ID.
@@ -117,6 +124,11 @@ import jakarta.persistence.OneToMany;
         return imageUser;
     }
 
+    //Retrieves the user's role.
+    public String getRolUser(){
+        return rol;
+    }
+
     //Updates the user's first name.
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -164,6 +176,11 @@ import jakarta.persistence.OneToMany;
     // Updates the user's image.
     public void setImageUser(Blob imageUser) {
         this.imageUser = imageUser;
+    }
+
+    // Updates the user's role.
+    public void setRolUser(String rol) {
+        this.rol = rol;
     }
 
 }

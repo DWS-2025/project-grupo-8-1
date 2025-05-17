@@ -8,5 +8,6 @@ public record UserDTO(
     String mail,
     String address,
     String password,
-    String image
+    String image,
+    String rol
 ) {}
