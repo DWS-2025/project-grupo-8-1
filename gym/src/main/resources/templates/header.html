@@ -1,25 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-    <body>
-        <div class="header">
-            <div class="icon_header">
-                <img src="/images/icon_img.svg">
-                <div>Bodybuild fitness</div>
-            </div>
-            <div class="options_header">
-                <a href="/">home</a>
-                <a href="/gymclass">class</a>
-                <!-- <a href="/memberships">Memberships</a> -->
-                <a href="/review">review</a>
-                {{^user_login}}
-                <a href="/login">Login</a>
-                {{/user_login}}
 
-                {{#user_login}}
-                <a href="/home">Welcome, {{userName}} </a>
-                {{/user_login}}
-                
-            </div>
+    <div class="header">
+        <div class="icon_header">
+            <img src="/images/icon_img.svg">
+            <div>Bodybuild fitness</div>
         </div>
-    </body>
-</html>
+        <div class="options_header">
+            <a href="/">home</a>
+            <a href="/gymclass">class</a>
+            <!-- <a href="/memberships">Memberships</a> -->
+            <a href="/review">review</a>
+            {{^user_login}}
+            <a href="/login">Login</a>
+            {{/user_login}}
+
+            {{#user_login}}
+            <a href="/home">Welcome, {{userName}} </a>
+            {{/user_login}}
+            
+        </div>
+    </div>

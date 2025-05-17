@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 import es.dws.gym.gym.dto.CreateReviewDTO;
 import es.dws.gym.gym.dto.ReviewDTO;
@@ -36,13 +38,19 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
     @Autowired
     private UserRepository userRepository;
 
-    // This method converts a Review entity to a ReviewDTO object.
+    // Método privado para limpiar el contenido HTML de la review
+    private String sanitizeReviewContent(String content) {
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.BLOCKS);
+        return policy.sanitize(content);
+    }
+
+    // Este método convierte una Review a ReviewDTO y SANEa el contenido
     @Override
     public ReviewDTO toDTO(Review review) {
         return new ReviewDTO(
             review.getId(),
             review.getUser().getId().toString(),
-            review.getContent(),
+            sanitizeReviewContent(review.getContent()),
             review.getLocalDateTime().toString()
         );
     }
@@ -72,7 +80,8 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
             return null;
         }
         Date sqlDate = Date.valueOf(reviewDto.date());
-        Review review = new Review(reviewDto.content(), sqlDate);
+        String safeContent = sanitizeReviewContent(reviewDto.content());
+        Review review = new Review(safeContent, sqlDate);
         review.setUser(user);
         reviewRepository.save(review); // Guardar la reseña para generar el ID
         return convertToDTO(review);
@@ -84,7 +93,8 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
         if (review == null) {
             return null;
         }
-        review.setContent(updateDto.content());
+        String safeContent = sanitizeReviewContent(updateDto.content());
+        review.setContent(safeContent);
         reviewRepository.save(review);
         return convertToDTO(review);
     }
@@ -107,7 +117,8 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
         java.util.Date utilDate = new java.util.Date();
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
         User user = userService.getUser(userName);
-        Review review = new Review(content, sqlDate);
+        String safeContent = sanitizeReviewContent(content);
+        Review review = new Review(safeContent, sqlDate);
         review.setUser(user);
         user.getReviews().add(review);
         userRepository.save(user);
@@ -115,7 +126,11 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
 
     // This method retrieves a review by ID.
     public Review getReview(Long id) {
-        return reviewRepository.findById(id).orElse(null);
+        Review review = reviewRepository.findById(id).orElse(null);
+        if (review != null) {
+            review.setContent(sanitizeReviewContent(review.getContent()));
+        }
+        return review;
     }
 
     // This method checks if a review exists by ID.
@@ -123,15 +138,20 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
         return getReview(id) != null;
     }
 
-    // This method retrieves all reviews from the database.
+    // Este método obtiene todas las reviews y SANEa el contenido de cada una
     public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+        List<Review> reviews = reviewRepository.findAll();
+        for (Review review : reviews) {
+            review.setContent(sanitizeReviewContent(review.getContent()));
+        }
+        return reviews;
     }
 
     // This method retrieves all reviews for a specific user.
     public void editReview(Long id, String content) {
         Review review = getReview(id);
-        review.setContent(content);
+        String safeContent = sanitizeReviewContent(content);
+        review.setContent(safeContent);
         reviewRepository.save(review);
     }
 

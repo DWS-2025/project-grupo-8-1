@@ -5,19 +5,54 @@
         <title>Add review</title>
         <link rel="stylesheet" href="/css/genericStyles.css">
         <link rel="stylesheet" href="/css/panelForm.css">
+        <!-- Quill CSS desde CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+        <style>
+            /* Fondo blanco para la barra de herramientas de Quill */
+            .ql-toolbar.ql-snow {
+                background: #ff4b4b;
+            }
+        </style>
     </head>
     <body>
         {{>header}}
-        <form action="/review/add" method="POST" class="panel">
+        <form action="/review/add" method="POST" class="panel" enctype="multipart/form-data" onsubmit="return submitQuillForm();">
             <h2>Review</h2>
             <div class="panel-group">
-                <label for="contenReview">New View</label>
-                <textarea id="contenReview" name="contenReview" rows="20" cols="100" required></textarea>
+                <label for="quill-editor">New Review</label>
+                <div id="quill-editor" style="height: 300px;"></div>
+                <input type="hidden" id="contenReview" name="contenReview" required>
             </div>
             <div class="panel-group">
                 <input type="submit" class="boton_black" value="Create">
             </div>
         </form>
         {{>footer}}
+        <!-- Quill JS desde CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+        <script>
+            // Inicializar Quill sin el botón de link
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            function submitQuillForm() {
+                var html = quill.root.innerHTML.trim();
+                // Evitar enviar solo un <p><br></p> vacío
+                if (html === '<p><br></p>' || html === '') {
+                    alert('Por favor, introduce una reseña.');
+                    return false;
+                }
+                document.getElementById('contenReview').value = html;
+                return true;
+            }
+        </script>
     </body>
 </html>

@@ -44,9 +44,9 @@ public class DefaultDataService {
             java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
             prueba.getReviews().addAll(Arrays.asList(
-                new Review("Esto es el 1 comentario de prueba", sqlDate),
-                new Review("Esto es el 2 comentario de prueba", sqlDate),
-                new Review("Esto es el 3 comentario de prueba", sqlDate)
+                new Review("<p>Esto es el 1 comentario de prueba</p>", sqlDate),
+                new Review("<p>Esto es el 2 comentario de prueba</p>", sqlDate),
+                new Review("<p>Esto es el 3 comentario de prueba</p>", sqlDate)
             ));
 
             prueba.getReviews().forEach(review -> review.setUser(prueba));
@@ -59,28 +59,28 @@ public class DefaultDataService {
             User admin = new User("admin", "Edward", "Scissorhands", "+34888877766", "edward@example.com", "654 Maple St", passwordEncoder.encode("password5"), null, "ADMIN");
 
             alice.getReviews().addAll(Arrays.asList(
-                new Review("Great gym, highly recommend!", sqlDate),
-                new Review("Clean facilities and friendly staff.", sqlDate)
+                new Review("<p>Great gym, highly recommend!</p>", sqlDate),
+                new Review("<p>Clean facilities and friendly staff.</p>", sqlDate)
             ));
 
             bob.getReviews().addAll(Arrays.asList(
-                new Review("The classes are amazing!", sqlDate),
-                new Review("Good value for the price.", sqlDate)
+                new Review("<p>The classes are amazing!</p>", sqlDate),
+                new Review("<p>Good value for the price.</p>", sqlDate)
             ));
 
             charlie.getReviews().addAll(Arrays.asList(
-                new Review("The equipment is top-notch.", sqlDate),
-                new Review("I love the yoga classes.", sqlDate)
+                new Review("<p>The equipment is top-notch.</p>", sqlDate),
+                new Review("<p>I love the yoga classes.</p>", sqlDate)
             ));
 
             diana.getReviews().addAll(Arrays.asList(
-                new Review("The trainers are very helpful.", sqlDate),
-                new Review("The gym is a bit crowded in the evenings.", sqlDate)
+                new Review("<p>The trainers are very helpful.</p>", sqlDate),
+                new Review("<p>The gym is a bit crowded in the evenings.</p>", sqlDate)
             ));
 
             admin.getReviews().addAll(Arrays.asList(
-                new Review("The app makes booking classes easy.", sqlDate),
-                new Review("The parking is convenient.", sqlDate)
+                new Review("<p>The app makes booking classes easy.</p>", sqlDate),
+                new Review("<p>The parking is convenient.</p>", sqlDate)
             ));
 
             alice.getReviews().forEach(review -> review.setUser(alice));
