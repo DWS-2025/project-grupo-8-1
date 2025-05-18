@@ -89,26 +89,30 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests(authorize -> authorize
                     // PRIVATE ENDPOINTS
-					//USERS
-					.requestMatchers(HttpMethod.GET, "/api/users/*/").hasRole("USER")
-					.requestMatchers(HttpMethod.PUT, "/api/users/*/").hasRole("USER")
-					.requestMatchers(HttpMethod.PUT, "/api/users/*/image/").hasRole("USER")
-					.requestMatchers(HttpMethod.GET, "/api/users/*/image/").hasRole("USER")
-					.requestMatchers(HttpMethod.DELETE, "/api/users/*/").hasRole("ADMIN")
-					//REVIEW
-					.requestMatchers(HttpMethod.POST, "/api/review").hasAnyRole("USER")
-					.requestMatchers(HttpMethod.PUT, "/api/review").hasAnyRole("USER")
-					.requestMatchers(HttpMethod.DELETE, "/api/review/**").hasAnyRole("USER")
-					//GYMCLASS
-					.requestMatchers(HttpMethod.POST, "/api/gymclass").hasAnyRole("ADMIN")
-					.requestMatchers(HttpMethod.PUT, "/api/gymclass").hasAnyRole("ADMIN")
-					.requestMatchers(HttpMethod.DELETE, "/api/gymclass/**").hasAnyRole("ADMIN")
-					// PUBLIC ENDPOINTS
-					.requestMatchers(HttpMethod.POST, "/api/users/").permitAll() //register
-					.requestMatchers(HttpMethod.GET, "/api/review/**").permitAll()
-					.requestMatchers(HttpMethod.GET, "/api/gymclass/**").permitAll()
-					.requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-//					.requestMatchers(HttpMethod.GET, "/api/users/").permitAll() //if not conflict vs webFilterChain
+					 // USERS
+					.requestMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
+					.requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+					.requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("ADMIN") 
+					.requestMatchers(HttpMethod.DELETE, "/api/user/{id}").hasRole("ADMIN") 
+					.requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("USER") 
+					// REVIEW
+					.requestMatchers(HttpMethod.GET, "/api/review").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/review/paginated").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/review/{id}").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/review").hasRole("USER")
+					.requestMatchers(HttpMethod.PUT, "/api/review").hasRole("USER")
+					.requestMatchers(HttpMethod.DELETE, "/api/review/{id}").hasRole("USER")
+					// GYMCLASS
+					.requestMatchers(HttpMethod.GET, "/api/gymclass").permitAll()
+					.requestMatchers(HttpMethod.GET, "/api/gymclass/{id}").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/gymclass").hasRole("ADMIN") 
+					.requestMatchers(HttpMethod.PUT, "/api/gymclass").hasRole("ADMIN") 
+					.requestMatchers(HttpMethod.DELETE, "/api/gymclass/{id}").hasRole("ADMIN") 
+					.requestMatchers(HttpMethod.POST, "/api/gymclass/{id}/join").hasRole("USER") 
+					// LOGIN
+					.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/auth/logout").hasAnyRole("USER", "ADMIN")
 			);
 		
         // Disable Form login Authentication
