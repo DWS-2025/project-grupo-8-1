@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Bodybuild fitness</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+        <script>
+            function editUser(id) {
+                window.location.href = "/admin/user/edit/" + id;
+            }
+            function chargePassword(id) {
+                window.location.href = "/admin/user/newpassword/" + id;
+            }
+            function deleteUser(id) {
+                window.location.href = "/admin/user/delete/" + id;
+            }
+        </script>
+    </head>
+    <body>
+        {{>header}}
+        <div class="panel">
+            <h2>Admin panel</h2>
+            <h3>users information</h3>
+            {{#Users}}
+            <ul>
+                <li>User Name: {{id}}</li>
+                <li>First Name: {{firstName}}</li>
+                <li>Sure Name: {{sureName}}</li>
+                <li>telephone: {{telephone}}</li>
+                <li>mail: {{mail}}</li>
+                <li>address: {{address}}</li>
+            </ul>
+            <img src="/user/{{id}}/image">
+            <p>
+                <button type="button" onclick="editUser('{{id}}')">Edit user</button>
+                <button type="button" onclick="chargePassword('{{id}}')">Change password</button>
+                <button type="button" onclick="deleteUser('{{id}}')">Delete user</button>
+            </p>
+            {{/Users}}
+        </div>
+        {{>footer}}
+    </body>
+</html>

@@ -28,5 +28,12 @@ public class UserModelAtributes {
         } else {
             model.addAttribute("userName", null);
         }
+
+        boolean isAdmin = false;
+        if (isLoggedIn && authentication.getAuthorities() != null) {
+            isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+        }
+        model.addAttribute("isAdmin", isAdmin);
     }
 }

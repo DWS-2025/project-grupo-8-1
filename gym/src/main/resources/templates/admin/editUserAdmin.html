@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Register</title>
+        <link rel="stylesheet" href="/css/genericStyles.css">
+        <link rel="stylesheet" href="/css/panelForm.css">
+    </head>
+    <body>
+        {{>header}}
+        {{#User}}
+        <form action="/admin/user/edit/{{id}}" method="POST" class="panel" enctype="multipart/form-data">
+            <h2>Edit User</h2>
+            <div class="panel-group">
+                <label for="firstname">first name</label>
+                <input type="text" id="firstname" name="firstname" value="{{firstName}}" required>
+            </div>
+            <div class="panel-group">
+                <label for="secondName">Second name</label>
+                <input type="text" id="secondName" name="secondName" value="{{sureName}}" required>
+            </div>
+            <div class="panel-group">
+                <label for="telephone">mobile phone</label>
+                <input type="text" id="telephone" name="telephone" value="{{telephone}}" required>
+            </div>
+            <div class="panel-group">
+                <label for="mail">email address</label>
+                <input type="email" id="mail" name="mail" value="{{mail}}" required>
+            </div>
+            <div class="panel-group">
+                <label for="address_home">address home</label>
+                <input type="text" id="address" name="address" value="{{address}}" required>
+            </div>
+            <div class="panel-group">
+                <label for="imageUpload">Upload Image (JPG) 300x300</label>
+                <input type="file" id="imageUpload" name="imageUpload" accept="image/png, image/jpeg">
+            </div>
+            {{/User}}
+            <div class="panel-group">
+                <input type="submit" class="boton_black" value="edit">
+            </div>
+        </form>
+        {{>footer}}
+    </body>
+</html>

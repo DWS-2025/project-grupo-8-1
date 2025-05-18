@@ -6,6 +6,13 @@
         <link rel="stylesheet" href="/css/genericStyles.css">
         <link rel="stylesheet" href="/css/panelForm.css">
         <script src="/js/HomeUserBotoms.js"></script>
+        {{#isAdmin}}
+        <script>
+        function adminpanel() {
+            window.location.href = "/admin/listusers";
+        }
+        </script>
+        {{/isAdmin}}
     </head>
     <body>
         {{>header}}
@@ -31,6 +38,9 @@
                 <button type="button" onclick="deleteUser()">Delete user</button>
             </p>
             <p><button type="button" onclick="logout()">Logout</button></p>
+            {{#isAdmin}}
+            <p><button type="button" onclick="adminpanel()">Admin Panel</button></p>
+            {{/isAdmin}}
         </div>
         {{>footer}}
     </body>

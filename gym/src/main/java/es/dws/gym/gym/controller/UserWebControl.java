@@ -132,13 +132,22 @@ public class UserWebControl {
 
     //Handles POST requests to update the user's information. It checks if the image is valid and updates the user's data in the system.
     @PostMapping("/user/edit")
-    public String uploadUser(@RequestParam String firstname, @RequestParam String secondName, @RequestParam String telephone,@RequestParam String mail, @RequestParam String address, @RequestParam MultipartFile imageUpload, Model model) throws Exception {
+    public String uploadUser(
+            @RequestParam String firstname,
+            @RequestParam String secondName,
+            @RequestParam String telephone,
+            @RequestParam String mail,
+            @RequestParam String address,
+            @RequestParam(required = false) MultipartFile imageUpload,
+            Model model) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
-        if(!imageService.validateImage(imageUpload, "/edit", model)){
+        // Permitir imagen null o vacía
+        MultipartFile imageFile = (imageUpload != null && !imageUpload.isEmpty()) ? imageUpload : null;
+        if (imageFile != null && !imageService.validateImage(imageFile, "/edit", model)) {
             return "error";
         }
-        userService.editUser(userId, firstname, secondName, telephone, mail, address, imageUpload);
+        userService.editUser(userId, firstname, secondName, telephone, mail, address, imageFile);
         return "redirect:/home";
     }
 
@@ -152,7 +161,7 @@ public class UserWebControl {
     @GetMapping("/user/delete/true")
     public String deleteUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = ((UserDetails) authentication.getPrincipal()).getUsername(); // Cambiado a userId
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
 
         User user = userService.getUser(userId);
         userService.removeUser(user);
