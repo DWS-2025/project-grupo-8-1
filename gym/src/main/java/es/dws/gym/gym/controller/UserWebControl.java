@@ -3,7 +3,6 @@ package es.dws.gym.gym.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -133,11 +132,13 @@ public class UserWebControl {
 
     //Handles POST requests to update the user's information. It checks if the image is valid and updates the user's data in the system.
     @PostMapping("/user/edit")
-    public String uploadUser(@CookieValue(value = "login", defaultValue = "") String login, @RequestParam String firstname, @RequestParam String secondName, @RequestParam String telephone,@RequestParam String mail, @RequestParam String address, @RequestParam MultipartFile imageUpload, Model model) throws Exception {
+    public String uploadUser(@RequestParam String firstname, @RequestParam String secondName, @RequestParam String telephone,@RequestParam String mail, @RequestParam String address, @RequestParam MultipartFile imageUpload, Model model) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
         if(!imageService.validateImage(imageUpload, "/edit", model)){
             return "error";
         }
-        userService.editUser(login, firstname, secondName, telephone, mail, address, imageUpload);
+        userService.editUser(userId, firstname, secondName, telephone, mail, address, imageUpload);
         return "redirect:/home";
     }
 
