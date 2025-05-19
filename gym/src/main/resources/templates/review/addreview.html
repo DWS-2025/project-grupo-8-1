@@ -5,10 +5,10 @@
         <title>Add review</title>
         <link rel="stylesheet" href="/css/genericStyles.css">
         <link rel="stylesheet" href="/css/panelForm.css">
-        <!-- Quill CSS desde CDN -->
+        <!-- Quill CSS from CDN -->
         <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
         <style>
-            /* Fondo blanco para la barra de herramientas de Quill */
+            /* White background for Quill toolbar */
             .ql-toolbar.ql-snow {
                 background: #ff4b4b;
             }
@@ -28,10 +28,10 @@
             </div>
         </form>
         {{>footer}}
-        <!-- Quill JS desde CDN -->
+        <!-- Quill JS from CDN -->
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
         <script>
-            // Inicializar Quill sin el botón de link
+            // Initialize Quill without the link button
             var quill = new Quill('#quill-editor', {
                 theme: 'snow',
                 modules: {
@@ -45,9 +45,9 @@
 
             function submitQuillForm() {
                 var html = quill.root.innerHTML.trim();
-                // Evitar enviar solo un <p><br></p> vacío
+                // Prevent sending only an empty <p><br></p>
                 if (html === '<p><br></p>' || html === '') {
-                    alert('Por favor, introduce una reseña.');
+                    alert('Please enter a review.');
                     return false;
                 }
                 document.getElementById('contenReview').value = html;

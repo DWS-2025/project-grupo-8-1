@@ -6,13 +6,13 @@ async function loadReviews(page) {
 
     try {
         const response = await fetch(`/api/review/paginated?page=${page}&size=${reviewsPerPage}`);
-        if (!response.ok) throw new Error("Error al cargar las reseñas");
+        if (!response.ok) throw new Error("Error loading reviews");
 
         const data = await response.json();
 
         // Validate the structure of the response
         if (!Array.isArray(data.reviews)) {
-            throw new Error("La estructura de la respuesta no es válida");
+            throw new Error("The response structure is not valid");
         }
 
         const reviewsContainer = document.getElementById("reviews-container");
@@ -41,5 +41,5 @@ async function loadReviews(page) {
     }
 }
 
-// Cargar la primera página al iniciar
+// Load the first page on startup
 document.addEventListener("DOMContentLoaded", () => loadReviews(currentPage));

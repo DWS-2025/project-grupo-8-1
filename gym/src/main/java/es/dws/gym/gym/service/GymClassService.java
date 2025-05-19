@@ -174,15 +174,15 @@ public class GymClassService {
 
     // This method searches gym classes by name.
     public List<Gimclass> searchGymClassesByName(String name) {
-        return gimclassRepository.searchByNameContainingIgnoreCase(name); // Devuelve directamente la lista de Gimclass
+        return gimclassRepository.searchByNameContainingIgnoreCase(name); // Returns directly the list of Gimclass
     }
 
     // This method retrieves gym classes by user.
     public List<Gimclass> getGymClassesByUser(String userId) {
         User user = userService.getUser(userId);
         if (user == null) {
-            return List.of(); // Devuelve una lista vacía si el usuario no existe
+            return List.of(); // Returns an empty list if the user does not exist
         }
-        return gimclassRepository.searchByUsersContaining(user); // Devuelve directamente la lista de Gimclass
+        return gimclassRepository.searchByUsersContaining(user); // Returns directly the list of Gimclass
     }
 }

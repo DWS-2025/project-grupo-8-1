@@ -24,13 +24,13 @@ public class RepositoryUserDetailsService implements UserDetailsService {
 		User user = userRepository.findByid(id)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-		// Obtener el rol del usuario desde el modelo User
+		 // Get the user's role from the User model
 		GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRolUser());
 
 		return new org.springframework.security.core.userdetails.User(
 				user.getId(),
 				user.getPassword(),
-				List.of(authority) // Convertimos el único rol en una lista inmutable
+				List.of(authority) // Convert the single role to an immutable list
 		);
 	}
 }

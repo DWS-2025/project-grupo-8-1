@@ -61,12 +61,12 @@ public class Review {
         this.date = date;
     }
 
-    // Sets the user who posted the review.
+    // Gets the user who posted the review.
     public User getUser(){
         return users;
     }
 
-    // Retrieves the user who posted the review.
+    // Sets the user who posted the review.
     public void setUser(User users){
         this.users = users;
     }

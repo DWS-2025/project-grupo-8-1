@@ -13,14 +13,14 @@
         <div class="panel">
             <h2>Review</h2>
             {{#user_login}}
-            <a href="/review/add" class="boton_black">add view</a>
+            <a href="/review/add" class="boton_black">add review</a>
             {{/user_login}}
             <div id="reviews-container">
                 <!-- Reviews will be loaded here dynamically -->
             </div>
             <div id="pagination-controls">
-                <button id="prev-page" onclick="loadReviews(currentPage - 1)" disabled>Anterior</button>
-                <button id="next-page" onclick="loadReviews(currentPage + 1)">Siguiente</button>
+                <button id="prev-page" onclick="loadReviews(currentPage - 1)" disabled>Previous</button>
+                <button id="next-page" onclick="loadReviews(currentPage + 1)">Next</button>
             </div>
         </div>
         {{>footer}}

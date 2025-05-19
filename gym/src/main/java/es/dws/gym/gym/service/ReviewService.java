@@ -38,13 +38,13 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
     @Autowired
     private UserRepository userRepository;
 
-    // Método privado para limpiar el contenido HTML de la review
+    // Private method to sanitize the HTML content of the review
     private String sanitizeReviewContent(String content) {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.BLOCKS);
         return policy.sanitize(content);
     }
 
-    // Este método convierte una Review a ReviewDTO y SANEa el contenido
+    // This method converts a Review to ReviewDTO and SANITIZES the content
     @Override
     public ReviewDTO toDTO(Review review) {
         return new ReviewDTO(
@@ -83,7 +83,7 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
         String safeContent = sanitizeReviewContent(reviewDto.content());
         Review review = new Review(safeContent, sqlDate);
         review.setUser(user);
-        reviewRepository.save(review); // Guardar la reseña para generar el ID
+        reviewRepository.save(review); // Save the review to generate the ID
         return convertToDTO(review);
     }
 
@@ -138,7 +138,7 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
         return getReview(id) != null;
     }
 
-    // Este método obtiene todas las reviews y SANEa el contenido de cada una
+    // This method retrieves all reviews from the database and SANITIZES the content of each one
     public List<Review> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
         for (Review review : reviews) {
