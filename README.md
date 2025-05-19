@@ -10,6 +10,7 @@ Enrique Escobar, e.escobar.2022@alumnos.urjc.es, EnriqueEscobar-URJC
 - **Gimclass**: Representa las clases de gimnasio, incluyendo detalles como nombre, descripción, horario, duración y usuarios inscritos.
 
 ### Permisos de Usuarios
+- **Admin**: Pueden crear clases, modificar las reviews de otros usuario, acceder al panel admin, borrar usuarios.
 - **User**: Puede registrarse, iniciar sesión, inscribirse en clases, y dejar reseñas.
 - **Anónimos**: Pueden navegar por la web, pero no pueden realizar acciones hasta que se registren.
 
@@ -28,6 +29,11 @@ Como único desarrollador del proyecto, me he encargado de implementar todos los
 - **Backend**: Java con Spring Boot.
 - **Frontend**: HTML, CSS, y JavaScript.
 - **Base de Datos**: MySQL para el almacenamiento de datos.
+- **Seguridad**:
+    - Medidas implementadas para evitar ataques de SQL injection.
+    - Uso de la librería `com.googlecode.owasp-java-html-sanitizer` para sanitizar entradas de usuario en partes críticas del código.
+    - La web funciona ahora bajo HTTPS para proteger la transmisión de datos.
+    - Autenticación de usuarios mediante login con JWT (JSON Web Token).
 
 ## API REST y DTOs
 Se han implementado API REST para permitir la interacción entre el frontend y el backend de manera eficiente. Además, se han utilizado DTOs (Data Transfer Objects) para estructurar y simplificar la transferencia de datos entre las capas de la aplicación.
@@ -43,9 +49,15 @@ Se han implementado API REST para permitir la interacción entre el frontend y e
     - Creación, edición y eliminación de reseñas por parte de los usuarios.
     - Visualización de todas las reseñas.
 
-## Próximos Pasos
-- Realizar paginación mediante AJAX de una de las entidades
-- Realizar una consulta dinámica sobre una de las entidades
+- Se permite consultar, editar y borrar mi usuario.
+- Se pueden listar todos los usuarios y se permite borrarlos (solo para el admin).
+- Se ha implementado el campo con texto enriquecido.
+- Se ha implementado el campo con el fichero en disco.
+
+## Pasos añadidos de la practica anterior
+Todas las funcionalidades previstas han sido implementadas en el código, incluyendo:
+- Paginación mediante AJAX de una de las entidades.
+- Consulta dinámica sobre una de las entidades.
 
 ## Funcionalidades No Implementadas
 - **Memberships**: Aunque estaba planeado incluir un sistema de membresías para gestionar los planes de suscripción de los usuarios, esta funcionalidad no se ha implementado. Sin embargo, he acordado con mi profesor que, dado que soy el único desarrollador del proyecto, no era necesario incluir esta característica.
