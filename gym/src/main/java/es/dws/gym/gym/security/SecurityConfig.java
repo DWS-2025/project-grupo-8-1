@@ -143,6 +143,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize -> authorize
 						 // ANONYMOUS PAGES
 						.requestMatchers("/login").anonymous()
+						.requestMatchers("/login/error").anonymous()
 						.requestMatchers("/register").anonymous()
 						// PUBLIC PAGES
 						.requestMatchers("/").permitAll()
