@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/css/genericStyles.css">
         <link rel="stylesheet" href="/css/panelForm.css">
         <!-- Quill CSS from CDN -->
-        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+        <link href="/css/quill.snow.css" rel="stylesheet">
         <style>
             /* White background for Quill toolbar */
             .ql-toolbar.ql-snow {
@@ -29,7 +29,7 @@
         </form>
         {{>footer}}
         <!-- Quill JS from CDN -->
-        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+        <script src="/js/quill.js"></script>
         <script>
             // Initialize Quill without the link button
             var quill = new Quill('#quill-editor', {
