@@ -1,8 +1,6 @@
 package es.dws.gym.gym.controller;
 import es.dws.gym.gym.model.Review;
-import es.dws.gym.gym.model.User;
 import es.dws.gym.gym.service.ReviewService;
-import es.dws.gym.gym.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 // This class handles the review-related views and operations.
 @Controller
@@ -25,10 +22,6 @@ public class ReviewWebControl {
     @Autowired
     private ReviewService reviewService;
 
-    // Instance variable for managing user operations
-    @Autowired
-    private UserService userService;
-    
     // This method handles GET requests for the "/review" page.
     @GetMapping("/review")
     public String review(Model model) {
@@ -45,9 +38,7 @@ public class ReviewWebControl {
     // This method handles POST requests for adding a new review. It processes the submitted review content and adds the review using the ReviewManager.
     @PostMapping("/review/add")
     public String createReview(@RequestParam String contenReview) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
-        reviewService.addReview(userId, contenReview);
+        reviewService.addReview(contenReview);
         return "redirect:/review";
     }
 
@@ -61,7 +52,7 @@ public class ReviewWebControl {
             return "redirect:/review";
         }
 
-        if (!isUserAccessReview(authentication, review)) {
+        if (!reviewService.isUserAccessReview(authentication, review)) {
             model.addAttribute("error", "Error: Not authorized to edit this review");
             model.addAttribute("error_redirect", "/review");
             return "error";
@@ -74,20 +65,20 @@ public class ReviewWebControl {
     // This method handles POST requests for editing an existing review. It processes the submitted review content and updates the review using the ReviewManager.
     @PostMapping("/review/{id}/edit")
     public String editProcessReview(@PathVariable Long id, @RequestParam String contenReview, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Review review = reviewService.getReview(id);
 
         if (review == null) {
             return "redirect:/review";
         }
 
-        if (!isUserAccessReview(authentication, review)) {
+        boolean reviewEdit = reviewService.editReview(id, contenReview);
+
+        if (!reviewEdit) {
             model.addAttribute("error", "Error: Not authorized to edit this review");
             model.addAttribute("error_redirect", "/review");
             return "error";
         }
-        
-        reviewService.editReview(id, contenReview);
+
         return "redirect:/review";
     }
 
@@ -101,7 +92,7 @@ public class ReviewWebControl {
             return "redirect:/review";
         }
 
-        if (!isUserAccessReview(authentication, review)) {
+        if (!reviewService.isUserAccessReview(authentication, review)) {
             model.addAttribute("error", "Error: Not authorized to edit this review");
             model.addAttribute("error_redirect", "/review");
             return "error";
@@ -125,29 +116,12 @@ public class ReviewWebControl {
         if ("true".equals(action)) {
             boolean deleteReview = reviewService.deleteReview(review);
             if (!deleteReview) {
-            model.addAttribute("error", "Error: Not authorized to edit this review");
-            model.addAttribute("error_redirect", "/review");
-            return "error";
-        }
+                model.addAttribute("error", "Error: Not authorized to edit this review");
+                model.addAttribute("error_redirect", "/review");
+                return "error";
+            }
         }
         return "redirect:/review";
     }    
-
-    // Función privada para comprobar permisos sobre una review
-    private boolean isUserAccessReview(Authentication authentication, Review review) {
-        // Si es ADMIN, siempre true
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            return true;
-        }
-        // Si es USER y es autor de la review
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
-            String userId = authentication.getPrincipal() instanceof UserDetails ? ((UserDetails) authentication.getPrincipal()).getUsername() : null;
-            if (userId != null && review != null) {
-                User user = userService.getUser(userId);
-                return review.isAutorReview(user);
-            }
-        }
-        return false;
-    }
 }
 

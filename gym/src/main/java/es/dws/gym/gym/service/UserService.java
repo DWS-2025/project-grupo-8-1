@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +53,12 @@ public class UserService {
 
     // This method retrieves a user by ID and converts it to a ViewUserDTO object.
     public ViewUserDTO getViewUserAsDTO(String id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!isUserAccessUser(authentication, id)){
+            return null;
+        } 
+
         User user = getUser(id);
         return user == null ? null : new ViewUserDTO(
             user.getId(),
@@ -87,12 +96,12 @@ public class UserService {
 
     // This method updates an existing user based on the provided UpdateUserDTO object.
     public UpdateUserDTO updateUser(String id, UpdateUserDTO updatedUser) {
-        if (!isUser(id)) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!isUser(id) || !isUserAccessUser(authentication, id)) {
             return null;
         }
         try {
             editUser(
-                    id,
                     updatedUser.firstName(),
                     updatedUser.sureName(),
                     updatedUser.telephone(),
@@ -109,8 +118,9 @@ public class UserService {
 
     // This method deletes a user by ID. It returns true if the user was deleted successfully, false otherwise.
     public boolean deleteUser(String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = getUser(id);
-        if (user == null) {
+        if (user == null || !isUserAccessUser(authentication, id)) {
             return false;
         }
         removeUser(user);
@@ -119,8 +129,9 @@ public class UserService {
 
     // This method deletes a user by ID and returns the deleted user's information as a ViewUserDTO object.
     public ViewUserDTO deleteUserAndReturnDTO(String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = getUser(id);
-        if (user == null) {
+        if (user == null || !isUserAccessUser(authentication, id)) {
             return null;
         }
         ViewUserDTO userDTO = getViewUserAsDTO(id);
@@ -165,9 +176,16 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    // This method retrieves a user by ID and converts it to a User object.
-    public void editUser(String id, String firstName, String sureName, String telephone, String mail, String address, MultipartFile imageUpload) throws IOException {
-        User user = getUser(id);
+    // This method retrieves the current authenticated user from the security context and updates their information from user.
+    public boolean editUser(String firstName, String sureName, String telephone, String mail, String address, MultipartFile imageUpload) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        
+        if(!isUserAccessUser(authentication, userId)){
+            return false;
+        } 
+
+        User user = getUser(userId);
         user.setFirstName(firstName);
         user.setSureName(sureName);
         user.setTelephone(telephone);
@@ -178,11 +196,41 @@ public class UserService {
             user.setImageUser(imageUser);
         }
         userRepository.save(user);
+        return true;
     }
 
-    // This method retrieves a user by ID and converts it to a User object.
-    public void removeUser(User user) {
-        userRepository.delete(user);
+    // This method checks if the user has access to modify their own user information or if they are an admin.
+    public boolean isUserAccessUser(Authentication authentication, String userId) {
+        // If the user is an admin, they can access any user.
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return true;
+        }
+        // If the user is a regular user, check if they are trying to modify their own user information.
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
+            String authUserId = authentication.getPrincipal() instanceof UserDetails ? ((UserDetails) authentication.getPrincipal()).getUsername() : null;
+            return authUserId != null && authUserId.equals(userId);
+        }
+        return false;
+    }
+
+    // This method retrieves a user by ID and updates their information.
+    public boolean editUser(String userId, String firstName, String sureName, String telephone, String mail, String address, MultipartFile imageUpload) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!isUser(userId) || !isUserAccessUser(authentication, userId)){
+            return false;
+        }
+        User user = getUser(userId);
+        user.setFirstName(firstName);
+        user.setSureName(sureName);
+        user.setTelephone(telephone);
+        user.setMail(mail);
+        user.setAddress(address);
+        if (imageUpload != null && !imageUpload.isEmpty()) {
+            Blob imageUser = BlobProxy.generateProxy(imageUpload.getInputStream(), imageUpload.getSize());
+            user.setImageUser(imageUser);
+        }
+        userRepository.save(user);
+        return true;
     }
 
     // This method retrieves all users from the database.
@@ -190,14 +238,39 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    // This method retrieves a user by ID and converts it to a User object.
-    public boolean setPassword(String id, String newPassword) {
-        User user = getUser(id);
-        if (user == null) {
+    // This method retrieves the current authenticated user from the security context and updates their password.
+    public boolean setPassword(String newPassword) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        if (!isUser(userId) || authentication.getPrincipal().equals("anonymousUser")) {
             return false;
         }
+        User user = getUser(userId);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+        return true;
+    }
+
+    // This method retrieves a user by ID and updates their password, checking access.
+    public boolean setPassword(String id, String newPassword){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!isUser(id) || !isUserAccessUser(authentication, id)){
+            return false;
+        }
+        User user = getUser(id);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
+    }   
+
+    // This method removes a user from the database by User object, checking access.
+    public boolean removeUser(User user) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = user.getId();
+        if (!isUser(userId) || !isUserAccessUser(authentication, userId)) {
+            return false;
+        }
+        userRepository.delete(user);
         return true;
     }
 }

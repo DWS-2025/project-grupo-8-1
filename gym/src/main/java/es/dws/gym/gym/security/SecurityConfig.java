@@ -92,9 +92,9 @@ public class SecurityConfig {
 					 // USERS
 					.requestMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.POST, "/api/user").permitAll()
-					.requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("ADMIN") 
-					.requestMatchers(HttpMethod.DELETE, "/api/user/{id}").hasRole("ADMIN") 
-					.requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("USER") 
+					.requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("USER")
+					.requestMatchers(HttpMethod.DELETE, "/api/user/{id}").hasRole("USER")
+					.requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("USER")
 					// REVIEW
 					.requestMatchers(HttpMethod.GET, "/api/review").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/review/paginated").permitAll()

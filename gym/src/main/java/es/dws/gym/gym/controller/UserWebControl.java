@@ -106,16 +106,18 @@ public class UserWebControl {
     //Handles POST requests to change the user's password. It checks if the password and confirmation match before updating the password in the system.
     @PostMapping("/user/newpassword")
     public String changePassword(@RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
-
         if (!password.equals(confirmPassword)) {
             model.addAttribute("error", "WARNING: passwords do not match");
             model.addAttribute("error_redirect", "/newpassword");
             return "error";
         }
 
-        userService.setPassword(userId, password);
+        boolean setPassword = userService.setPassword(password);
+        if(!setPassword){
+            model.addAttribute("error", "WARNING: password not changed");
+            model.addAttribute("error_redirect", "/newpassword");
+            return "error";
+        }
         return "redirect:/home";
     }
     
@@ -140,14 +142,18 @@ public class UserWebControl {
             @RequestParam String address,
             @RequestParam(required = false) MultipartFile imageUpload,
             Model model) throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
         // Permitir imagen null o vacía
         MultipartFile imageFile = (imageUpload != null && !imageUpload.isEmpty()) ? imageUpload : null;
         if (imageFile != null && !imageService.validateImage(imageFile, "/edit", model)) {
             return "error";
         }
-        userService.editUser(userId, firstname, secondName, telephone, mail, address, imageFile);
+        
+        boolean editUser = userService.editUser(firstname, secondName, telephone, mail, address, imageFile);
+        if(!editUser){
+            model.addAttribute("error", "WARNING: user not edited");
+            model.addAttribute("error_redirect", "/user/edit");
+            return "error";
+        }
         return "redirect:/home";
     }
 

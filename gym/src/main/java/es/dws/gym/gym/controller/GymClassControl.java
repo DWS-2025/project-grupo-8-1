@@ -115,13 +115,13 @@ public class GymClassControl {
             return "redirect:/gymclass";
         }
 
-            if (gimClassService.getGimClass(id) == null) {
-                model.addAttribute("error", "Error: The class does not exist.");
-                model.addAttribute("error_redirect", "/gymclass");
-                return "error";
-            }
+        if (gimClassService.getGimClass(id) == null) {
+            model.addAttribute("error", "Error: The class does not exist.");
+            model.addAttribute("error_redirect", "/gymclass");
+            return "error";
+        }
 
-            gimClassService.deleteClass(id);
+        gimClassService.deleteClass(id);
         return "redirect:/gymclass";
     }
     

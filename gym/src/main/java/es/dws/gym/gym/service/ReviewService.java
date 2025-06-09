@@ -1,12 +1,14 @@
 package es.dws.gym.gym.service;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
@@ -75,11 +77,14 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
 
     // This method creates a new review and saves it to the database.
     public ReviewDTO createReview(CreateReviewDTO reviewDto) {
-        User user = userService.getUser(reviewDto.user());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        User user = userService.getUser(userId);
         if (user == null) {
             return null;
         }
-        Date sqlDate = Date.valueOf(reviewDto.date());
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
         String safeContent = sanitizeReviewContent(reviewDto.content());
         Review review = new Review(safeContent, sqlDate);
         review.setUser(user);
@@ -89,8 +94,9 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
 
     // This method updates an existing review based on the provided ReviewDTO object.
     public ReviewDTO updateReview(Long id, ReviewDTO updateDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Review review = getReview(id);
-        if (review == null) {
+        if (review == null || !isUserAccessReview(authentication, review)) {
             return null;
         }
         String safeContent = sanitizeReviewContent(updateDto.content());
@@ -101,8 +107,9 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
 
     // This method deletes a review by ID and returns the deleted review as a ReviewDTO object.
     public ReviewDTO deleteReviewAndReturnDTO(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Review review = getReview(id);
-        if (review == null) {
+        if (review == null || !isUserAccessReview(authentication, review)) {
             return null;
         }
         ReviewDTO reviewDTO = convertToDTO(review);
@@ -113,10 +120,14 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
     }
 
     // This method adds a review to a user and saves it to the database.
-    public void addReview(String userName, String content) {
+    public void addReview(String content) {
         java.util.Date utilDate = new java.util.Date();
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-        User user = userService.getUser(userName);
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
+        
+        User user = userService.getUser(userId);
         String safeContent = sanitizeReviewContent(content);
         Review review = new Review(safeContent, sqlDate);
         review.setUser(user);
@@ -148,23 +159,54 @@ public class ReviewService implements es.dws.gym.gym.mapper.reviewMapper {
     }
 
     // This method retrieves all reviews for a specific user.
-    public void editReview(Long id, String content) {
+    public boolean editReview(Long id, String content) {
         Review review = getReview(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if(!isUserAccessReview(authentication, review)){
+            return false;
+        } 
+
         String safeContent = sanitizeReviewContent(content);
         review.setContent(safeContent);
         reviewRepository.save(review);
+        return true;
     }
 
     // This method deletes a review by ID.
-    public void deleteReview(Review review) {
+    public boolean deleteReview(Review review) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if(!isUserAccessReview(authentication, review)){
+            return false;
+        } 
+
         User user = review.getUser();
         user.getReviews().remove(review);
         userRepository.save(user);
+        return true;
     }
 
     // This method retrieves paginated reviews and converts them to ReviewDTO objects.
     public Page<ReviewDTO> getReviewsPaginated(int page, int size) {
         return reviewRepository.findAll(PageRequest.of(page, size))
                 .map(this::convertToDTO);
+    }
+
+    // This method checks if the user has access to the review based on their role and ownership of the review.
+    public boolean isUserAccessReview(Authentication authentication, Review review) {
+        // If the user is an administrator, grant access
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return true;
+        }
+        // If the user is a regular user, check if they are the author of the review
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
+            String userId = authentication.getPrincipal() instanceof UserDetails ? ((UserDetails) authentication.getPrincipal()).getUsername() : null;
+            if (userId != null && review != null) {
+                User user = userService.getUser(userId);
+                return review.isAutorReview(user);
+            }
+        }
+        return false;
     }
 }
