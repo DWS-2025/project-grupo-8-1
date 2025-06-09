@@ -111,26 +111,24 @@ public class ReviewWebControl {
         return "review/are_your_sure_delete_review";
     }
 
-    // This method handles GET requests for deleting a review based on the user's confirmation. It checks if the review exists and deletes it if confirmed.
-    @GetMapping("/review/{id}/delete/{action}")
-    public String deleteReview(@PathVariable Long id, @PathVariable String action, Model model) {
-        
+    // This method handles POST requests for deleting a review. It checks if the review exists and if the user is authorized to delete it.
+    @PostMapping("/review/{id}/delete")
+    public String deleteReview(@PathVariable Long id, @RequestParam String action, Model model) {
         if (!reviewService.isReviewExist(id)) {
             model.addAttribute("error", "Error: The review does not exist");
             model.addAttribute("error_redirect", "/review");
             return "error";
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Review review = reviewService.getReview(id);
-        if (!isUserAccessReview(authentication, review)) {
+
+        if ("true".equals(action)) {
+            boolean deleteReview = reviewService.deleteReview(review);
+            if (!deleteReview) {
             model.addAttribute("error", "Error: Not authorized to edit this review");
             model.addAttribute("error_redirect", "/review");
             return "error";
         }
-
-        if (action.equals("true")) {
-            reviewService.deleteReview(review);
         }
         return "redirect:/review";
     }    

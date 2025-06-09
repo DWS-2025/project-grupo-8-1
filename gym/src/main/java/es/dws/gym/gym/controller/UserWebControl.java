@@ -157,9 +157,13 @@ public class UserWebControl {
         return "user/are_your_sure_delete_user";
     }
 
-    //Handles GET requests to delete the user.
-    @GetMapping("/user/delete/true")
-    public String deleteUser() {
+    //Handles POST requests to delete the user. If the action is confirmed, the user is removed from the system and redirected to the logout page.
+    @PostMapping("/user/delete/true")
+    public String deleteUser(@RequestParam(required = false) String action, Model model) {
+        if (!"true".equals(action)) {
+            // If the action is not confirmed, redirect to home
+            return "redirect:/home";
+        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
 
@@ -167,6 +171,7 @@ public class UserWebControl {
         userService.removeUser(user);
         return "redirect:/logout";
     }
+    
     //Handles GET requests to delete the user without confirmation.
     @GetMapping("/user/{id}/image")
     public ResponseEntity<Object> downloadUserImage(@PathVariable String id) throws SQLException, IOException {

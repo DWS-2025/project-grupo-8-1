@@ -108,10 +108,12 @@ public class GymClassControl {
         return "ClassGym/are_your_sure_delete_class";
     }
     
-    // This method handles GET requests for deleting a gym class.
-    @GetMapping("/gymclass/{id}/delete/{accion}")
-    public String GymClassDelete(@PathVariable Long id, @PathVariable String accion, Model model) {
-        if (accion.equals("true")) {
+    // This method handles POST requests for deleting a gym class. It checks if the class exists and if the action is confirmed before deleting the class using the GymClassService.
+    @PostMapping("/gymclass/{id}/delete")
+    public String GymClassDelete(@PathVariable Long id, @RequestParam(required = false) String action, Model model) {
+        if (!"true".equals(action)) {
+            return "redirect:/gymclass";
+        }
 
             if (gimClassService.getGimClass(id) == null) {
                 model.addAttribute("error", "Error: The class does not exist.");
@@ -120,7 +122,6 @@ public class GymClassControl {
             }
 
             gimClassService.deleteClass(id);
-        }
         return "redirect:/gymclass";
     }
     
