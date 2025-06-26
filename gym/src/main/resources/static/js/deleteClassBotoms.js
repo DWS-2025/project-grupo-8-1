@@ -3,7 +3,6 @@ function notDeleteReview(){
 }
 
 function DeleteReview(id, action){
-    // Crea y envía un formulario POST a /gymclass/{id}/delete con action=true
     var form = document.createElement("form");
     form.method = "POST";
     form.action = "/gymclass/" + id + "/delete";
