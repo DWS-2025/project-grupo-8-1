@@ -18,14 +18,17 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/api/auth/")
 public class LoginRestControler {
     
+    // This class is used to handle authentication-related REST API requests
     @Autowired
     private UserLoginService userLoginService;
 
+    // The @Controller annotation indicates that this class is a controller in the Spring MVC framework
     @PostMapping("/login")
     public ResponseEntity <AuthResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response){
         return userLoginService.login(response, loginRequest);
     }
-
+    
+    // The @PostMapping annotation maps HTTP POST requests onto specific handler methods
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(
             @CookieValue(name = "RefreshToken", required = false) String refreshToken, HttpServletResponse response) {
@@ -33,6 +36,7 @@ public class LoginRestControler {
         return userLoginService.refresh(response, refreshToken);
     }
 
+    // The @PostMapping annotation maps HTTP POST requests onto specific handler methods
     @PostMapping("/logout")
     public ResponseEntity<AuthResponse> logOut(HttpServletResponse response) {
         return ResponseEntity.ok(new AuthResponse(Status.SUCCESS, userLoginService.logout(response)));

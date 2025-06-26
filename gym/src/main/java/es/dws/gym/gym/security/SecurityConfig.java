@@ -1,5 +1,6 @@
 package es.dws.gym.gym.security;
 
+import java.security.SecureRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,8 +40,7 @@ public class SecurityConfig {
 
     @Bean
 	public PasswordEncoder passwordEncoder() {
-
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder(10, new SecureRandom());
 	}
 
 	@Bean
@@ -95,6 +95,8 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("USER")
 					.requestMatchers(HttpMethod.DELETE, "/api/user/{id}").hasRole("USER")
 					.requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("USER")
+					.requestMatchers(HttpMethod.GET, "/api/user/image/{id}").hasRole("USER")
+					.requestMatchers(HttpMethod.PUT, "/api/user/image/{id}").hasRole("USER")
 					// REVIEW
 					.requestMatchers(HttpMethod.GET, "/api/review").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/review/paginated").permitAll()
@@ -106,9 +108,12 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.GET, "/api/gymclass").permitAll()
 					.requestMatchers(HttpMethod.GET, "/api/gymclass/{id}").permitAll()
 					.requestMatchers(HttpMethod.POST, "/api/gymclass").hasRole("ADMIN") 
-					.requestMatchers(HttpMethod.PUT, "/api/gymclass").hasRole("ADMIN") 
+					.requestMatchers(HttpMethod.PUT, "/api/gymclass/{id}").hasRole("ADMIN") 
 					.requestMatchers(HttpMethod.DELETE, "/api/gymclass/{id}").hasRole("ADMIN") 
-					.requestMatchers(HttpMethod.POST, "/api/gymclass/{id}/join").hasRole("USER") 
+					.requestMatchers(HttpMethod.POST, "/api/gymclass/toggle/{id}").hasRole("USER")
+					.requestMatchers(HttpMethod.DELETE, "/api/gymclass/toggle/{id}").hasRole("USER")
+					.requestMatchers(HttpMethod.GET, "/api/gymclass/pdf/{id}").hasRole("USER")
+					.requestMatchers(HttpMethod.POST, "/api/gymclass/pdf/{id}").hasRole("ADMIN") 
 					// LOGIN
 					.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 					.requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
@@ -157,6 +162,7 @@ public class SecurityConfig {
 						.requestMatchers("/fonts/**").permitAll()
 						// PRIVATE PAGES
 						.requestMatchers("/gymclass/{id:[0-9]+}/toggleUser").hasAnyRole("USER")
+						.requestMatchers("/gymclass/file/{id:[0-9]+}").hasAnyRole("USER")
 						.requestMatchers("/gymclass/**").hasAnyRole("ADMIN")
 						.requestMatchers("/admin/**").hasAnyRole("ADMIN")
 						.requestMatchers("/home").hasRole("USER")

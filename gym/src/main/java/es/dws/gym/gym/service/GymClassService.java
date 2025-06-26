@@ -1,10 +1,13 @@
 package es.dws.gym.gym.service;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import es.dws.gym.gym.dto.CreateGymClassDTO;
@@ -30,6 +33,9 @@ public class GymClassService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ArchiveService archiveService; 
 
     // This method retrieves all gym classes from the database and converts them to GymClassDTO objects.
     public List<GymClassDTO> getAllGymClassesAsDTO() {
@@ -112,6 +118,20 @@ public class GymClassService {
         gimclassRepository.save(gimclass);
     }
 
+    // This method adds a new gym class with an optional PDF file.
+    public void addClass(String name, String descript, String time, String duration, byte[] pdfBytes, String pdfFileName) {
+        String savedPdfFile = null;
+        if (pdfBytes != null && pdfBytes.length > 0 && pdfFileName != null && !pdfFileName.isBlank()) {
+            try {
+                savedPdfFile = archiveService.saveArchive(pdfBytes, pdfFileName);
+            } catch (Exception e) {
+                throw new RuntimeException("Error al guardar el PDF: " + e.getMessage(), e);
+            }
+        }
+        Gimclass gimclass = new Gimclass(name, descript, formatSQLDate(time), formatSQLTime(duration), savedPdfFile);
+        gimclassRepository.save(gimclass);
+    }
+
     // This method retrieves a gym class by ID.
     public Gimclass getGimClass(Long id) {
         return gimclassRepository.findById(id).orElse(null);
@@ -134,14 +154,80 @@ public class GymClassService {
         }
     }
 
+    // Este método actualiza una clase de gimnasio y opcionalmente su PDF asociado.
+    public void updateClass(Long id, String name, String descript, String time, String duration, byte[] pdfBytes, String pdfFileName) {
+        Gimclass gimclass = gimclassRepository.findById(id).orElse(null);
+        if (gimclass != null) {
+            gimclass.setName(name);
+            gimclass.setDescript(descript);
+            gimclass.setTime(formatSQLDate(time));
+            gimclass.setDuration(formatSQLTime(duration));
+            if (pdfBytes != null && pdfBytes.length > 0 && pdfFileName != null && !pdfFileName.isBlank()) {
+                // Elimina el PDF anterior si existe
+                if (gimclass.getPdfFile() != null) {
+                    try {
+                        archiveService.deleteArchive(gimclass.getPdfFile());
+                    } catch (Exception ignored) {}
+                }
+                try {
+                    String savedPdfFile = archiveService.saveArchive(pdfBytes, pdfFileName);
+                    gimclass.setPdfFile(savedPdfFile);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error al guardar el PDF: " + e.getMessage(), e);
+                }
+            }
+            gimclassRepository.save(gimclass);
+        }
+    }
+
     // This method deletes a gym class by ID.
     public void deleteClass(Long id) {
         Gimclass gimclass = gimclassRepository.findById(id).orElse(null);
         gimclassRepository.delete(gimclass);
     }
 
-    // This method toggles a user's enrollment in a gym class.
-    public void toggleUserInClass(Long classId, String userId) {
+    // Añadir usuario a una clase con autenticación
+    public GymClassDTO addUserToClass(Long classId, String userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!userService.isUserAccessUser(authentication, userId)) {
+            return null;
+        }
+        Gimclass gimclass = gimclassRepository.findById(classId).orElse(null);
+        User user = userService.getUser(userId);
+        if (gimclass != null && user != null) {
+            if (!gimclass.getUsers().contains(user)) {
+                gimclass.getUsers().add(user);
+                gimclassRepository.save(gimclass);
+            }
+            return convertToDTO(gimclass);
+        }
+        return null;
+    }
+
+    // Quitar usuario de una clase con autenticación
+    public GymClassDTO removeUserFromClass(Long classId, String userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!userService.isUserAccessUser(authentication, userId)) {
+            return null;
+        }
+        Gimclass gimclass = gimclassRepository.findById(classId).orElse(null);
+        User user = userService.getUser(userId);
+        if (gimclass != null && user != null) {
+            if (gimclass.getUsers().contains(user)) {
+                gimclass.getUsers().remove(user);
+                gimclassRepository.save(gimclass);
+            }
+            return convertToDTO(gimclass);
+        }
+        return null;
+    }
+
+    // Alterna la inscripción de un usuario en una clase (añadir si no está, quitar si está)
+    public GymClassDTO toggleUserInClass(Long classId, String userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!userService.isUserAccessUser(authentication, userId)) {
+            return null;
+        }
         Gimclass gimclass = gimclassRepository.findById(classId).orElse(null);
         User user = userService.getUser(userId);
         if (gimclass != null && user != null) {
@@ -151,7 +237,9 @@ public class GymClassService {
                 gimclass.getUsers().add(user);
             }
             gimclassRepository.save(gimclass);
+            return convertToDTO(gimclass);
         }
+        return null;
     }
 
     // This method checks if a user is already enrolled in a gym class.
@@ -184,5 +272,38 @@ public class GymClassService {
             return List.of(); // Returns an empty list if the user does not exist
         }
         return gimclassRepository.searchByUsersContaining(user); // Returns directly the list of Gimclass
+    }
+
+    // This method retrieves the PDF file associated with a gym class by its ID.
+    public byte[] getClassPdf(Long classId) throws IOException {
+        Gimclass gimclass = gimclassRepository.findById(classId).orElse(null);
+        if (gimclass == null || gimclass.getPdfFile() == null) {
+            throw new IllegalArgumentException("Class not found or does not have an associated PDF.");
+        }
+        return archiveService.getArchive(gimclass.getPdfFile());
+    }
+
+    // Método específico para actualizar solo el PDF de una clase
+    public GymClassDTO updateClassPdf(Long classId, byte[] pdfBytes, String pdfFileName) {
+        Gimclass gimclass = gimclassRepository.findById(classId).orElse(null);
+        if (gimclass == null) {
+            return null;
+        }
+        if (pdfBytes != null && pdfBytes.length > 0 && pdfFileName != null && !pdfFileName.isBlank()) {
+            // Elimina el PDF anterior si existe
+            if (gimclass.getPdfFile() != null) {
+                try {
+                    archiveService.deleteArchive(gimclass.getPdfFile());
+                } catch (Exception ignored) {}
+            }
+            try {
+                String savedPdfFile = archiveService.saveArchive(pdfBytes, pdfFileName);
+                gimclass.setPdfFile(savedPdfFile);
+            } catch (Exception e) {
+                throw new RuntimeException("Error al guardar el PDF: " + e.getMessage(), e);
+            }
+        }
+        gimclassRepository.save(gimclass);
+        return convertToDTO(gimclass);
     }
 }

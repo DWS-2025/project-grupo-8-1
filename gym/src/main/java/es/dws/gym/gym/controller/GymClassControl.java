@@ -14,20 +14,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 // This class handles the gym class-related views and operations.
 // It interacts with the GymClassService to manage gym class data and operations.
 @Controller
 public class GymClassControl {
     
-    // Instance variable for managing gym class operations
+    // Instance variable for managing gym class operations.
     @Autowired
     private GymClassService gimClassService;
 
     // This method handles GET requests for the "/gymclass" page. It checks the login status of the user and passes the list of gym classes to the view for rendering.
     @GetMapping("/gymclass")
     public String GymClassMain(Model model) {
-
         model.addAttribute("GymClass", gimClassService.getListGymClass());
         return "ClassGym/ClassGym";
     }
@@ -44,6 +47,7 @@ public class GymClassControl {
                               @RequestParam String descript, 
                               @RequestParam String time, 
                               @RequestParam String duration, 
+                              @RequestParam(value = "pdfUpload", required = false) MultipartFile pdfUpload,
                               Model model) {
 
         if (name == null || name.isEmpty() || descript == null || descript.isEmpty() || 
@@ -54,9 +58,19 @@ public class GymClassControl {
         }
 
         try {
-            gimClassService.addClass(name, descript, time, duration);
+            byte[] pdfBytes = null;
+            String pdfFileName = null;
+            if (pdfUpload != null && !pdfUpload.isEmpty()) {
+                pdfBytes = pdfUpload.getBytes();
+                pdfFileName = pdfUpload.getOriginalFilename();
+            }
+            gimClassService.addClass(name, descript, time, duration, pdfBytes, pdfFileName);
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", "Error: Invalid time or duration format.");
+            model.addAttribute("error_redirect", "/gymclass/add");
+            return "error";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error uploading PDF: " + e.getMessage());
             model.addAttribute("error_redirect", "/gymclass/add");
             return "error";
         }
@@ -84,14 +98,31 @@ public class GymClassControl {
                                @RequestParam String descript, 
                                @RequestParam String time, 
                                @RequestParam String duration, 
+                               @RequestParam(value = "pdfUpload", required = false) MultipartFile pdfUpload,
                                Model model) {
         if (gimClassService.getGimClass(id) == null) {
             model.addAttribute("error", "Error: The class does not exist.");
             model.addAttribute("error_redirect", "/gymclass");
             return "error";
         }
+        try {
+            byte[] pdfBytes = null;
+            String pdfFileName = null;
+            if (pdfUpload != null && !pdfUpload.isEmpty()) {
+                pdfBytes = pdfUpload.getBytes();
+                pdfFileName = pdfUpload.getOriginalFilename();
+            }
+            gimClassService.updateClass(id, name, descript, time, duration, pdfBytes, pdfFileName);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", "Error: Invalid time or duration format.");
+            model.addAttribute("error_redirect", "/gymclass/" + id + "/edit");
+            return "error";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error uploading PDF: " + e.getMessage());
+            model.addAttribute("error_redirect", "/gymclass/" + id + "/edit");
+            return "error";
+        }
 
-        gimClassService.updateClass(id, name, descript, time, duration);
         return "redirect:/gymclass";
     }
     
@@ -126,11 +157,11 @@ public class GymClassControl {
     }
     
     // This method handles GET requests for toggling a user's participation in a gym class.
-    @GetMapping("/gymclass/{id}/toggleUser")
+    @PostMapping("/gymclass/{id}/toggleUser")
     public String toggleUserInClass(@PathVariable Long id, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
-        
+
         if (gimClassService.getGimClass(id) == null) {
             model.addAttribute("error", "Error: The class does not exist.");
             model.addAttribute("error_redirect", "/gymclass");
@@ -166,4 +197,27 @@ public class GymClassControl {
 
         return "ClassGym/ClassGym";
     }
+
+    // This method handles GET requests for downloading a PDF file associated with a gym class.
+    @GetMapping("/gymclass/file/{id}")
+    public ResponseEntity<byte[]> downloadClassPdf(@PathVariable Long id, Model model) {
+        try {
+            var gymClass = gimClassService.getGimClass(id);
+            if (gymClass == null || gymClass.getPdfFile() == null) {
+                model.addAttribute("error", "Error: The class does not exist or does not have an associated PDF.");
+                model.addAttribute("error_redirect", "/gymclass");
+                return ResponseEntity.notFound().build();
+            }
+            byte[] pdfBytes = gimClassService.getClassPdf(id);
+            String fileName = gymClass.getPdfFile();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error:" + e.getMessage());
+            model.addAttribute("error_redirect", "/gymclass");
+            return ResponseEntity.internalServerError().build();
+        }
+    }     
 }

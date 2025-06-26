@@ -8,7 +8,7 @@
     </head>
     <body>
         {{>header}}
-        <form action="/gymclass/add" method="POST" class="panel">
+        <form action="/gymclass/add" method="POST" class="panel" enctype="multipart/form-data">
             <h2>Gym Class</h2>
             <div class="panel-group">
                 <label for="name">Class Name</label>
@@ -25,6 +25,10 @@
             <div class="panel-group">
                 <label for="duration">Duration (HH:mm:ss)</label>
                 <input type="text" id="duration" name="duration" placeholder="e.g., 01:30:00" required>
+            </div>
+            <div class="panel-group">
+                <label for="pdfUpload">Upload PDF (optional)</label>
+                <input type="file" id="pdfUpload" name="pdfUpload" accept="application/pdf">
             </div>
             <div class="panel-group">
                 <input type="submit" class="boton_black" value="Create">

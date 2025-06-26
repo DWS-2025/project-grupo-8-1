@@ -36,6 +36,9 @@ public class Gimclass {
     // Duration of the class
     private Time duration;
 
+    // PDF file associated with the class, if any
+    private String pdfFile;
+    
     public Gimclass(){}
 
     //Constructor to initialize a gym class.
@@ -44,6 +47,15 @@ public class Gimclass {
         this.descript = descript;
         this.time = time;
         this.duration = duration;
+        this.pdfFile = null;
+    }
+
+    public Gimclass(String name, String descript, Date time, Time duration, String pdfFile) {
+        this.name = name;
+        this.descript = descript;
+        this.time = time;
+        this.duration = duration;
+        this.pdfFile = pdfFile;
     }
 
     // Retrieves the ID of the class.
@@ -76,6 +88,11 @@ public class Gimclass {
         return users;
     }
 
+    // Retrieves the PDF file associated with the class.
+    public String getPdfFile() {
+        return pdfFile;
+    }
+
     // Sets the list of users enrolled in the class.
     public void setId(Long id) {
         this.id = id;
@@ -99,5 +116,10 @@ public class Gimclass {
     // Sets the duration of the class.
     public void setDuration(Time duration) {
         this.duration = duration;
+    }
+
+    // Sets the PDF file associated with the class.
+    public void setPdfFile(String pdfFile) {
+        this.pdfFile = pdfFile;
     }
 }

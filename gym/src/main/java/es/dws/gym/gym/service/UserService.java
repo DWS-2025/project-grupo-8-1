@@ -36,6 +36,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ImageService imageService;
+
     // This method retrieves all users from the database and converts them to ViewUserDTO objects.
     public List<ViewUserDTO> getAllViewUsersDTO(){
         return userRepository.findAll().stream()
@@ -272,5 +275,58 @@ public class UserService {
         }
         userRepository.delete(user);
         return true;
+    }
+
+    // Excepción personalizada para errores de usuario
+    public static class UserServiceException extends RuntimeException {
+        public UserServiceException(String message) {
+            super(message);
+        }
+    }
+
+    // This method saves a user image, checking if the user exists and if the image is valid.
+    public void saveUserImage(String userId, MultipartFile imageUpload) throws IOException {
+        if (!isUser(userId)) {
+            throw new UserServiceException("Access not allowed");
+        }
+        if (imageUpload == null || imageUpload.isEmpty()) {
+            throw new UserServiceException("Image not uploaded");
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!isUserAccessUser(authentication, userId)) {
+            throw new UserServiceException("Access not allowed");
+        }
+        if (!imageService.validateImage(imageUpload)) {
+            throw new UserServiceException("The image is not valid. It must be JPG and not exceed 300x300 pixels.");
+        }
+        User user = getUser(userId);
+        Blob imageUser = BlobProxy.generateProxy(imageUpload.getInputStream(), imageUpload.getSize());
+        user.setImageUser(imageUser);
+        userRepository.save(user);
+    }
+
+    // This method retrieves a user image by user ID, checking if the user exists and if the authenticated user has access.
+    // If the user does not exist or does not have access, it returns null.
+    public byte[] getUserImage(String userId) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!isUser(userId) || !isUserAccessUser(authentication, userId)) {
+            throw new UserServiceException("Access not allowed");
+        }
+        User user = getUser(userId);
+        if (user == null) {
+            throw new UserServiceException("Access not allowed");
+        }
+        Blob imageBlob = user.getImageUser();
+        try {
+            if (imageBlob == null) {
+                // Return a default image if the user does not have an image set
+                java.nio.file.Path defaultImagePath = java.nio.file.Paths.get("src/main/resources/static/images/default.jpg");
+                return java.nio.file.Files.readAllBytes(defaultImagePath);
+            }
+            int blobLength = (int) imageBlob.length();
+            return imageBlob.getBytes(1, blobLength);
+        } catch (java.sql.SQLException e) {
+            throw new IOException("Error retrieving user image", e);
+        }
     }
 }

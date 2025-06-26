@@ -17,6 +17,21 @@ function remove(id){
     form.submit();
 }
 
-function register(id){
-    window.location.href = "/gymclass/" + id + "/toggleUser";
+function downloadPDF(id){
+    window.location.href = "/gymclass/file/" + id;
+}
+
+function register(id) {
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/gymclass/" + id + "/toggleUser";
+
+    var input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "join";
+    input.value = "true";
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
 }

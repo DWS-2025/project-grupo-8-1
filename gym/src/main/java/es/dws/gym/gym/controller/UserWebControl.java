@@ -144,7 +144,7 @@ public class UserWebControl {
             Model model) throws Exception {
         // Permitir imagen null o vacía
         MultipartFile imageFile = (imageUpload != null && !imageUpload.isEmpty()) ? imageUpload : null;
-        if (imageFile != null && !imageService.validateImage(imageFile, "/edit", model)) {
+        if (imageFile != null && !imageService.validateImage(imageFile, "/user/edit", model)) {
             return "error";
         }
         

@@ -33,6 +33,9 @@
                     {{^users}} None {{/users}}
                     {{#users}} {{id}} {{/users}}
                 </li>
+                {{#pdfFile}}
+                <li>Document: <button type="button" onclick="downloadPDF('{{id}}')">Download</button></li>
+                {{/pdfFile}}
             </ul>
             {{#user_login}}
             <p>
