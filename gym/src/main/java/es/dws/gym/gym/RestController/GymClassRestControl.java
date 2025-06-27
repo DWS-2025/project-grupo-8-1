@@ -72,7 +72,7 @@ public class GymClassRestControl {
         return deletedClass == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(deletedClass);
     }
 
-    // Endpoint para subir un archivo PDF a una clase
+    // Endpoint to upload a PDF file associated with a gym class
     @PostMapping("/pdf/{id}")
     public ResponseEntity<GymClassDTO> uploadClassPdf(
             @PathVariable Long id,
@@ -98,7 +98,7 @@ public class GymClassRestControl {
         }
     }
 
-    // Endpoint para descargar el archivo PDF asociado a una clase
+    // Endpoint to download the PDF file associated with a gym class
     @GetMapping("/pdf/{id}")
     public ResponseEntity<byte[]> downloadClassPdf(@PathVariable Long id) {
         try {
@@ -121,25 +121,19 @@ public class GymClassRestControl {
         }
     }
 
-    // Añadir usuario a una clase (POST)
+    // Endpoint to toggle a user's participation in a gym class
+    // It adds the user if toggle is true, or removes the user if toggle is false
     @PostMapping("/toggle/{id}")
-    public ResponseEntity<GymClassDTO> addUserToClass(@PathVariable Long id, @RequestBody GymClassToggleDTO dto) {
+    public ResponseEntity<GymClassDTO> toggleUserInClass(@PathVariable Long id, @RequestBody GymClassToggleDTO dto) {
         try {
-            GymClassDTO updatedClass = gymClassService.addUserToClass(id, dto.userId());
-            if (updatedClass == null) {
-                return ResponseEntity.notFound().build();
+            GymClassDTO updatedClass;
+            if (dto.toggle()) {
+                // add user
+                updatedClass = gymClassService.addUserToClass(id, dto.userId());
+            } else {
+                // delete user
+                updatedClass = gymClassService.removeUserFromClass(id, dto.userId());
             }
-            return ResponseEntity.ok(updatedClass);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    // Quitar usuario de una clase (DELETE)
-    @DeleteMapping("/toggle/{id}")
-    public ResponseEntity<GymClassDTO> removeUserFromClass(@PathVariable Long id, @RequestBody GymClassToggleDTO dto) {
-        try {
-            GymClassDTO updatedClass = gymClassService.removeUserFromClass(id, dto.userId());
             if (updatedClass == null) {
                 return ResponseEntity.notFound().build();
             }

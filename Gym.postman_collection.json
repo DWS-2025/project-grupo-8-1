@@ -358,7 +358,19 @@
 					"name": "https://localhost:8443/api/review",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "https://localhost:8443/api/review",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"api",
+								"review"
+							]
+						}
 					},
 					"response": []
 				},
@@ -533,7 +545,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\":\"prueba\"\n}",
+							"raw": "{\n    \"userId\":\"prueba\",\n    \"toggle\":true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -563,11 +575,11 @@
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "DELETE",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\":\"prueba\"\n}",
+							"raw": "{\n    \"userId\":\"prueba\",\n    \"toggle\":false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
