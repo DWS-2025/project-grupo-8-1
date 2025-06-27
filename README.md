@@ -58,7 +58,11 @@ Se han implementado API REST para permitir la interacción entre el frontend y e
 Todas las funcionalidades previstas han sido implementadas en el código, incluyendo:
 - Paginación mediante AJAX de una de las entidades.
 - Consulta dinámica sobre una de las entidades.
+- Subir archivos pdf en un directorio local.
 
 ## Funcionalidades No Implementadas
 - **Memberships**: Aunque estaba planeado incluir un sistema de membresías para gestionar los planes de suscripción de los usuarios, esta funcionalidad no se ha implementado. Sin embargo, he acordado con mi profesor que, dado que soy el único desarrollador del proyecto, no era necesario incluir esta característica.
+
+## Vulnerabilidades corregidas
+- Un usuario puede eliminar cosas de otro desde la API (Broken Access Control)
 
