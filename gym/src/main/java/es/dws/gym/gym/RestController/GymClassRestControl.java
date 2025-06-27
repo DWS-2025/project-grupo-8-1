@@ -103,7 +103,6 @@ public class GymClassRestControl {
     public ResponseEntity<byte[]> downloadClassPdf(@PathVariable Long id) {
         try {
             byte[] pdfBytes = gymClassService.getClassPdf(id);
-            // Obtener el nombre real del archivo desde la entidad Gimclass
             String fileName = "class_" + id + ".pdf";
             var gimclass = gymClassService.getGimClass(id);
             if (gimclass != null && gimclass.getPdfFile() != null) {
